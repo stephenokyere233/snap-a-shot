@@ -30,21 +30,21 @@ const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, selectedPlatform, isLo
             {
                 isLoading ? <Loader /> : (<>
                     <div className="flex items-center gap-2 pb-2">
-                        <Image src={profileUrl || "/assets/avatar.svg"} className="w-16 rounded-full h-16 object-cover" alt="user_profile" width={200} height={200} />
+                        <img src={profileUrl} className="w-16 rounded-full h-16 object-cover" alt="user_profile" width={200} height={200} />
                         <div className="flex flex-col">
                             <div className="text-xl font-semibold">
                                 <h2>
-                                    {displayName || "Username"}
+                                    {displayName}
                                 </h2>
                             </div>
                             <span className="opacity-70">
-                                @{username || "username"}
+                                @{username}
                             </span>
                         </div>
                     </div>
                     <p className="">
                         {
-                            postText || "A social platform for remote workers: With the increase in remote work, there is a need for social platforms that cater to remote workers. A platform that allows remote workers to connect, share experiences, and even organize remote work events could be a great project."
+                            postText
                         }
                     </p>
                     <div className="flex justify-end pt-2 text-lg items-center gap-2">
