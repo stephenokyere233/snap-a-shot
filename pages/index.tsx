@@ -24,7 +24,7 @@ export default function Home() {
   const [errorMessage, setErrorMessage] = useState<string | null>("")
   const [selectedPlatform, setSelectedPlatform] = useState<string>("showwcase")
   const [showPicker, setShowPicker] = useState<boolean>(false)
-  const { isShowwcaseDataFetched, setIsShowwcaseDataFetched, isTwitterDataFetched, setIsTwitterDataFetched, selectedBGColor, setSelectedBGColor 
+  const { isShowwcaseDataFetched, setIsShowwcaseDataFetched, isTwitterDataFetched, setIsTwitterDataFetched, selectedBGColor, setSelectedBGColor
   } = useContext<IAppContext | null>(AppContext) as IAppContext
   const availablePlatForms = [
     "showwcase", "twitter"
@@ -194,19 +194,24 @@ export default function Home() {
     "linear-gradient(to right, #f12711, #f5af19)"  // red-yellow gradient
   ];
 
+  const images = [
+    "https://img.freepik.com/free-vector/emoticons-with-empty-space-background_79603-1023.jpg?w=996&t=st=1682173578~exp=1682174178~hmac=84d337892d4320bf3dec429b2e6aebbb6f9f4c8845f06fdf439f022ca3949b15"
+
+  ]
+
   const ColorPicker = () => {
     return (
-      <div onMouseLeave={()=>setShowPicker(false)} className="bg-white flex flex-col justify-center items-center p-4 absolute bottom-20 ">
+      <div onMouseLeave={() => setShowPicker(false)} className="bg-white flex flex-col justify-center items-center p-4 absolute bottom-20 ">
         <h1 className="font-bold ">Select Background</h1>
         <section className="">
           <h2>Solid</h2>
           <div className=" gap-2 grid-cols-6 grid">
             {
               colors.map(color => (
-                <div key={color} onClick={()=>setSelectedBGColor(color)} className="h-6 w-8 rounded-sm" style={{ background: color }}/>
+                <div key={color} onClick={() => setSelectedBGColor(color)} className="h-6 w-8 rounded-sm" style={{ background: color }} />
               ))
             }
-            <input type="color" className="w-8" onChange={(e)=>setSelectedBGColor(e.target.value)}/>
+            <input type="color" className="w-8" onChange={(e) => setSelectedBGColor(e.target.value)} />
           </div>
         </section>
         <section className="">
@@ -214,7 +219,17 @@ export default function Home() {
           <div className=" gap-2 grid-cols-6 grid">
             {
               gradients.map(color => (
-                <div key={color} onClick={() => setSelectedBGColor(color)} className="h-6 w-8 rounded-sm" style={{ background: color }} />
+                <div key={color} onClick={() => setSelectedBGColor(color)} className="h-6 w-8 rounded-sm" style={{ background: color}} />
+              ))
+            }
+          </div>
+        </section>
+        <section className="">
+          <h2>Images</h2>
+          <div className=" gap-2 grid-cols-6 grid">
+            {
+              images.map(color => (
+                <div key={color} onClick={() => setSelectedBGColor(`url(${color})`)} className="h-6 w-8 rounded-sm" style={{ backgroundImage: `url(${color})` }} />
               ))
             }
           </div>
@@ -267,7 +282,7 @@ export default function Home() {
       <main className="flex-1 flex flex-col justify-center items-center overflow-y-scroll relative">
 
         <Resizer>
-          <section style={{background:selectedBGColor}} id="shot" className=" w-full h-full p-20 flex justify-center items-center">
+          <section style={{ background: selectedBGColor }} id="shot" className=" w-full h-full p-20 flex justify-center items-center">
             <div className={`border w-[400px] min-w-[320px] max-w-[650px] p-6  bg-white rounded-md relative ${loading ? "flex items-center justify-center" : ""}`}>
               {
                 selectedPlatform === availablePlatForms[0] ?
