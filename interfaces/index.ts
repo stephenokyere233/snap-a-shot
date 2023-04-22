@@ -5,6 +5,8 @@ export interface IAppContext {
     setIsShowwcaseDataFetched: React.Dispatch<React.SetStateAction<boolean>>
     isTwitterDataFetched: boolean
     setIsTwitterDataFetched: React.Dispatch<React.SetStateAction<boolean>>
+    selectedBGColor: string
+    setSelectedBGColor: React.Dispatch<React.SetStateAction<string>>
 }
 
 export interface IAppProvider {

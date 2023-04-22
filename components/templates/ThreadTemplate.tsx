@@ -3,24 +3,7 @@ import { FaCommentDots } from 'react-icons/fa'
 import { FiHeart } from 'react-icons/fi'
 import Loader from '../loader'
 import Image from 'next/image'
-import { AppContext } from '@/context'
-import { IAppContext } from '@/interfaces'
-
-type TthreadProps = {
-    platformLogo: string
-    selectedPlatform: string
-    isLoading: boolean
-    profileUrl: string
-    displayName: string
-    username: string
-    postText: string
-    likeCount: number
-    replyCount: number
-}
-
-
-
-
+import { TthreadProps } from '@/types'
 
 const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, selectedPlatform, isLoading, profileUrl, displayName, username, postText, likeCount, replyCount }) => {
 
