@@ -13,7 +13,7 @@ const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, selectedPlatform, isLo
             {
                 isLoading ? <Loader /> : (<>
                     <div className="flex items-center gap-2 pb-2">
-                        <img src={profileUrl} className="w-16 rounded-full h-16 object-cover" alt="user_profile" loading='lazy' width={1000} height={1000} />
+                        <img src={profileUrl} className="w-16 rounded-full h-16 object-cover" alt="user_profile" loading='lazy'/>
                         <div className="flex flex-col">
                             <div className="text-xl font-semibold">
                                 <h2>
