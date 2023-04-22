@@ -254,7 +254,7 @@ export default function Home() {
             }
           </div>
         </section>
-        <section className="">
+        {/* <section className="">
           <h2>Images</h2>
           <div className=" gap-2 grid-cols-6 grid">
             {
@@ -263,7 +263,7 @@ export default function Home() {
               ))
             }
           </div>
-        </section>
+        </section> */}
       </div>
     )
   }
@@ -312,7 +312,7 @@ export default function Home() {
       <main className="flex-1 flex flex-col justify-center items-center overflow-y-scroll relative">
 
         <Resizer>
-          <section style={{ background: selectedBGColor, backgroundRepeat: "no-repeat" }} id="shot" className=" w-full h-full p-20 flex justify-center items-center bg-cover object-cover bg-no-repeat">
+          <section style={{ background: selectedBGColor }} id="shot" className=" w-full h-full p-20 flex justify-center items-center bg-cover object-cover bg-no-repeat">
             <div className={`border w-[400px] min-w-[320px] max-w-[650px] p-6  bg-white rounded-md relative ${loading ? "flex items-center justify-center" : ""}`}>
               {
                 selectedPlatform === availablePlatForms[0] ?
