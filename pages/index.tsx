@@ -229,7 +229,7 @@ export default function Home() {
           <div className=" gap-2 grid-cols-6 grid">
             {
               images.map(color => (
-                <div key={color} onClick={() => setSelectedBGColor(`url(${color})`)} className="h-6 w-8 rounded-sm" style={{ backgroundImage: `url(${color})` }} />
+                <div key={color} onClick={() => setSelectedBGColor(`url(${color})`)} className="h-6 w-8 rounded-sm object-contain bg-contain" style={{ backgroundImage: `url(${color})` }} />
               ))
             }
           </div>
