@@ -1,0 +1,18 @@
+export const COLORS = [
+    "blue",
+    "yellow",
+    "black",
+    "#FF69B4",
+    "#FFA07A",
+    "#FF6347",
+    "#FF7F50",
+    "#FFD700",
+    "#FF8C00",
+    "#FFA500",
+    "#00FF7F",
+    "#00FA9A",
+    "#00FF00",
+    "#7CFC00",
+    "#40E0D0",
+    "#8F00FF",
+]

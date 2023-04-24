@@ -1,19 +1,22 @@
-import { BiMoon, BiCamera, BiCopy } from "react-icons/bi"
 import { FormEvent, useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { FaDownload, FaSearch } from "react-icons/fa"
 import domtoimage from 'dom-to-image';
 import Resizer from "@/components/Resizer";
 import ThreadTemplate from "@/components/templates/ThreadTemplate";
-import DummyTemplate from "@/components/templates/DummyTemplate";
 import { AppContext } from "@/context";
 import { IAppContext } from "@/interfaces";
 import { FiDownload, FiSun } from "react-icons/fi";
 import { IoCopy, IoEyedropSharp } from "react-icons/io5";
-import Post from "@/components/Post";
+import { TABS } from "@/constants/tabs"
+import { COLORS } from "@/constants/colors"
+import { GRADIENTS } from "@/constants/gradients"
+import { DUMMY_TEMP } from "@/constants/dummy_template"
 
 export default function Home() {
-  // const [link, setLink] = useState<string>("")
+  const [showBackgroundPicker, setShowBackgroundPicker] = useState(false)
+  const [background, setBackground] = useState(GRADIENTS[7])
+  const [platform, setPlatform] = useState(TABS[0])
+  const [link, setLink] = useState('')
   const [user, setUser] = useState<any>(null)
   const [thread, setThread] = useState<any>(null)
   const [tweetInfo, setTweetInfo] = useState<any>(null)
@@ -23,13 +26,9 @@ export default function Home() {
   const [isValidTwitterLink, setIsValidTwitterLink] = useState<boolean>(false)
   const [error, setError] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string | null>("")
-  const [selectedPlatform, setSelectedPlatform] = useState<string>("showwcase")
-  const [showPicker, setShowPicker] = useState<boolean>(false)
-  const { isShowwcaseDataFetched, setIsShowwcaseDataFetched, isTwitterDataFetched, setIsTwitterDataFetched, selectedBGColor, setSelectedBGColor
+  const { isShowwcaseDataFetched, setIsShowwcaseDataFetched, isTwitterDataFetched, setIsTwitterDataFetched
   } = useContext<IAppContext | null>(AppContext) as IAppContext
-  const availablePlatForms = [
-    "showwcase", "twitter"
-  ]
+
 
   const LinksToCheck = [
     "https://www.showwcase.com/thread/", "https://twitter.com/"
@@ -42,16 +41,19 @@ export default function Home() {
       checkValidity(link)
       console.log("valid here", link)
     }
-  }, [selectedPlatform])
+  }, [platform])
 
 
   const handleChange = (event: any) => {
     checkValidity(event.target.value)
     setLink(event.target.value)
+    setError(false)
+    setErrorMessage(null)
 
   }
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
+    console.log(platform)
     if (!link) {
       setError(true)
       setErrorMessage("Please paste in a link")
@@ -59,13 +61,13 @@ export default function Home() {
     }
 
     if (isValidShowwcaseLink && !isValidTwitterLink) {
-      if (selectedPlatform === availablePlatForms[1]) {
-        setSelectedPlatform(availablePlatForms[0])
+      if (platform === TABS[1]) {
+        setPlatform(TABS[0])
         fetchThread(threadID as string)
         setError(false)
         setErrorMessage(null)
       }
-      else if (selectedPlatform === availablePlatForms[0]) {
+      else if (platform === TABS[0]) {
         fetchThread(threadID as string)
         setError(false)
         setErrorMessage(null)
@@ -74,13 +76,13 @@ export default function Home() {
     }
 
     else if (!isValidShowwcaseLink && isValidTwitterLink) {
-      if (selectedPlatform === availablePlatForms[0]) {
-        setSelectedPlatform(availablePlatForms[1])
+      if (platform === TABS[0]) {
+        setPlatform(TABS[1])
         fetchTwitterPost(threadID as string)
         setError(false)
         setErrorMessage(null)
       }
-      else if (selectedPlatform === availablePlatForms[1]) {
+      else if (platform === TABS[1]) {
         fetchTwitterPost(threadID as string)
         setError(false)
         setErrorMessage(null)
@@ -90,7 +92,7 @@ export default function Home() {
 
     else if (!isValidShowwcaseLink && !isValidTwitterLink) {
       setError(true)
-      setErrorMessage(`invalid ${selectedPlatform} link`)
+      setErrorMessage(`invalid ${platform} link`)
     }
 
 
@@ -108,52 +110,6 @@ export default function Home() {
       });
   }
 
-  const TABS = [
-    'Twitter',
-    'Showwcase'
-  ]
-
-  const COLORS = [
-    "blue",
-    "yellow",
-    "black",
-    "#FF69B4",
-    "#FFA07A",
-    "#FF6347",
-    "#FF7F50",
-    "#FFD700",
-    "#FF8C00",
-    "#FFA500",
-    "#00FF7F",
-    "#00FA9A",
-    "#00FF00",
-    "#7CFC00",
-    "#40E0D0",
-    "#8F00FF",
-  ]
-
-  const GRADIENTS = [
-    "linear-gradient(to right, #ff512f, #dd2476)",
-    "linear-gradient(to right, #c33764, #1d2671)",
-    "linear-gradient(to right, #f83600, #f9d423)",
-    "linear-gradient(to right, #614385, #516395)",
-    "linear-gradient(to right, #16a085, #f4d03f)",
-    "linear-gradient(to right, #4b6cb7, #182848)",
-    "linear-gradient(to right, #fc4a1a, #f7b733)",
-    "linear-gradient(to right, #1e90ff, #40e0d0)",
-    "linear-gradient(to right, #0abfbc, #fc354c)",
-    "linear-gradient(to right, #3d7eaa, #ffe47a)",
-    "linear-gradient(to right, #ff7e5f, #feb47b)",
-    "linear-gradient(to right, #00c6ff, #0072ff)",
-    "linear-gradient(to right, #da22ff, #9733ee)",
-    "linear-gradient(to right, #4776e6, #8e54e9)",
-    "linear-gradient(to right, #f12711, #f5af19)"
-  ]
-
-  const [showBackgroundPicker, setShowBackgroundPicker] = useState(false)
-  const [background, setBackground] = useState(GRADIENTS[7])
-  const [platform, setPlatform] = useState(TABS[0])
-  const [link, setLink] = useState('')
 
   useEffect(() => {
     console.log(platform)
@@ -226,7 +182,7 @@ export default function Home() {
       console.log("valid twitter link")
     }
     else {
-      if (selectedPlatform === availablePlatForms[0]) {
+      if (platform === TABS[0]) {
         setIsValidShowwcaseLink(false)
         console.log("invalid showwcase link")
       } else {
@@ -236,33 +192,46 @@ export default function Home() {
     }
   }
 
+
+
   return (
     <main className="min-h-screen bg-gray-50 p-10">
       <div>
         <header className="flex items-center justify-between">
-          <b>Logo</b>
+          <b>SNAP-A-SHOT</b>
           <ul className="bg-white w-max flex items-center border border-r-0">
             {TABS.map((item, index: number) => <li onClick={() => setPlatform(item)} className={`border border-l-0 border-b-0 border-t-0 p-2 font-medium px-5 cursor-pointer transition-all ${platform === item ? 'bg-blue-400 text-white border-l-0' : 'text-blue-400'}`} key={index}>{item}</li>)}
           </ul>
           <FiSun />
         </header>
-        <div className="my-5 flex items-center justify-center">
-          <input value={link} onChange={event => setLink(event.target.value)} placeholder="Paste link here..." className="text-gray-500 w-full p-2 px-3 border rounded-xl outline-blue-300 shadow-md max-w-xl" />
-        </div>
+        <form className="my-5 flex flex-col gap-3 items-center justify-center" onSubmit={handleSubmit}>
+          <input value={link} onChange={handleChange} placeholder="Paste link here..." className="text-gray-500 w-full p-2 px-3 border rounded-xl outline-blue-300 shadow-md max-w-xl" />
+          {
+            error &&
+            <p className="text-red-500 text-center capitalize">{errorMessage}</p>
+          }
+        </form>
       </div>
 
       <div className="flex items-center justify-center pb-44">
         <Resizer>
           <section style={{ background: background }} id="shot" className="transition-all w-full h-full p-20 flex justify-center items-center bg-cover object-cover bg-no-repeat">
-            {!link ? <Post platformLogo={`${platform}.svg`} platform={platform} name='John Doe' username='johndoe' content='A social platform for remote workers: With the increase in remote work, there is a need for social platforms that cater to remote workers.' />
-              : <Post platformLogo='' platform='' name='' username='' content='' />}
+            {
+              platform === TABS[0] ?
+                (!isShowwcaseDataFetched ? <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[1]} /> : <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={user?.profilePictureUrl} displayName={user?.displayName} username={user?.username} postContent={thread?.message} likeCount={thread?.totalUpvotes} replyCount={thread?.totalReplies} platform={TABS[1]} postImages={thread.images} />) : (!isTwitterDataFetched ?
+                  <ThreadTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[1]} /> : <ThreadTemplate platformLogo="twitter.svg" platform={TABS[1]} isLoading={loading} profileUrl={tweetInfo.includes.users[0].profile_image_url} displayName={tweetInfo.includes.users[0].name}
+                    username={tweetInfo.includes.users[0].username} postContent={tweetInfo.data.text.split("https://t.co/")[0]} likeCount={tweetInfo.data.public_metrics.like_count} replyCount={tweetInfo.data.public_metrics?.reply_count}
+                    twitterPostImages={tweetInfo.includes.media}
+                  />)
+            }
           </section>
         </Resizer>
       </div>
 
       <div className="flex justify-center fixed bottom-0 w-screen py-5">
         <div className="relative shadow-xl w-max rounded-xl">
-          {showBackgroundPicker && <div className="absolute flex gap-5 shadow-md p-5 rounded-md w-max bottom-[7rem] z-10 bg-white left-0">
+          {/* Color Picker */}
+          {showBackgroundPicker && <div onMouseLeave={() => setShowBackgroundPicker(false)} className="absolute flex gap-5 shadow-md p-5 rounded-md w-max bottom-[7rem] z-10 bg-white left-0">
             <div>
               <b className='mb-3 block'>Background color</b>
               <ul className="grid grid-cols-4 gap-2">
@@ -276,6 +245,9 @@ export default function Home() {
               </ul>
             </div>
           </div>}
+          {/* Color Picker */}
+
+          {/* ControlBox */}
           <ul className="p-3 flex items-center gap-2 bg-white rounded-xl">
             <li className="select-none relative flex flex-col items-center cursor-pointer hover:bg-gray-50 transition-all py-3 gap-1 px-5 rounded-md hover:text-blue-400 text-gray-500" onClick={() => setShowBackgroundPicker(!showBackgroundPicker)}>
               <IoEyedropSharp />
@@ -290,6 +262,7 @@ export default function Home() {
               <p>Copy</p>
             </li>
           </ul>
+          {/* ControlBox */}
         </div>
       </div>
     </main>
