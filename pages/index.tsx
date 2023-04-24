@@ -34,6 +34,32 @@ export default function Home() {
     "https://www.showwcase.com/thread/", "https://twitter.com/"
   ]
 
+  const checkValidity = async (link: string | null) => {
+    if (!link) return
+    if (link.includes(LinksToCheck[0])) {
+      const showwcaseLinkArray = link.split(LinksToCheck[0])
+      setIsValidShowwcaseLink(true)
+      const showwcaseThreadID = showwcaseLinkArray[1]
+      setThreadID(showwcaseThreadID)
+      console.log("valid showwcase link")
+    } else if (link.includes(LinksToCheck[1]) && link.includes("/status/")) {
+      const linkArray = link.split("/status/")
+      setIsValidTwitterLink(true)
+      const newTwitterPostID = linkArray[1]
+      setThreadID(newTwitterPostID)
+      console.log("valid twitter link")
+    }
+    else {
+      if (platform === TABS[0]) {
+        setIsValidShowwcaseLink(false)
+        console.log("invalid showwcase link")
+      } else {
+        setIsValidTwitterLink(false)
+        console.log("invalid twitter link")
+      }
+    }
+  }
+
   useEffect(() => {
     setError(false)
     setErrorMessage(null)
@@ -166,31 +192,7 @@ export default function Home() {
     })
   }
 
-  const checkValidity = async (link: string | null) => {
-    if (!link) return
-    if (link.includes(LinksToCheck[0])) {
-      const showwcaseLinkArray = link.split(LinksToCheck[0])
-      setIsValidShowwcaseLink(true)
-      const showwcaseThreadID = showwcaseLinkArray[1]
-      setThreadID(showwcaseThreadID)
-      console.log("valid showwcase link")
-    } else if (link.includes(LinksToCheck[1]) && link.includes("/status/")) {
-      const linkArray = link.split("/status/")
-      setIsValidTwitterLink(true)
-      const newTwitterPostID = linkArray[1]
-      setThreadID(newTwitterPostID)
-      console.log("valid twitter link")
-    }
-    else {
-      if (platform === TABS[0]) {
-        setIsValidShowwcaseLink(false)
-        console.log("invalid showwcase link")
-      } else {
-        setIsValidTwitterLink(false)
-        console.log("invalid twitter link")
-      }
-    }
-  }
+  
 
 
 
@@ -218,7 +220,7 @@ export default function Home() {
           <section style={{ background: background }} id="shot" className="transition-all w-full h-full p-20 flex justify-center items-center bg-cover object-cover bg-no-repeat">
             {
               platform === TABS[0] ?
-                (!isShowwcaseDataFetched ? <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[1]} /> : <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={user?.profilePictureUrl} displayName={user?.displayName} username={user?.username} postContent={thread?.message} likeCount={thread?.totalUpvotes} replyCount={thread?.totalReplies} platform={TABS[1]} postImages={thread.images} />) : (!isTwitterDataFetched ?
+                (!isShowwcaseDataFetched ? <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} /> : <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={user?.profilePictureUrl} displayName={user?.displayName} username={user?.username} postContent={thread?.message} likeCount={thread?.totalUpvotes} replyCount={thread?.totalReplies} platform={TABS[0]} showwcasePostImages={thread.images} />) : (!isTwitterDataFetched ?
                   <ThreadTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[1]} /> : <ThreadTemplate platformLogo="twitter.svg" platform={TABS[1]} isLoading={loading} profileUrl={tweetInfo.includes.users[0].profile_image_url} displayName={tweetInfo.includes.users[0].name}
                     username={tweetInfo.includes.users[0].username} postContent={tweetInfo.data.text.split("https://t.co/")[0]} likeCount={tweetInfo.data.public_metrics.like_count} replyCount={tweetInfo.data.public_metrics?.reply_count}
                     twitterPostImages={tweetInfo.includes.media}

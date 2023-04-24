@@ -7,7 +7,7 @@ export type TthreadProps = {
     postContent: string
     likeCount: number
     replyCount: number
-    postImages?: string[]
+    showwcasePostImages?: any[]
     twitterPostImages?: any[]
     platform: string
 }

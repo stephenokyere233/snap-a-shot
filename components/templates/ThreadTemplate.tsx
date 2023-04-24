@@ -7,17 +7,18 @@ import Image from 'next/image'
 import { TthreadProps } from '@/types'
 import Link from 'next/link'
 import { AiTwotoneHeart } from 'react-icons/ai'
+import { TABS } from '@/constants/tabs'
 
-const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, profileUrl, displayName, username, postContent, likeCount, replyCount, postImages, twitterPostImages }) => {
+const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, profileUrl, displayName, username, postContent, likeCount, replyCount, showwcasePostImages, twitterPostImages }) => {
 
 
     return (
         <div>
             <>
-                <div className={`border w-[400px] min-w-[320px] max-w-[650px] p-6 bg-white shadow-2xl rounded-2xl relative ${isLoading ? "flex items-center justify-center" : ""}`}>
+                <div className={`border min-w-[400px] max-w-[650px] p-6 bg-white shadow-2xl rounded-2xl relative ${isLoading ? "flex items-center justify-center" : ""}`}>
                     {
                         isLoading ? <Loader /> : (<>
-                            <div className="flex justify-between items-center">
+                            <div className="flex justify-between  items-center">
                                 <div className="flex gap-2 items-center">
                                     <Image src={profileUrl} className="w-[50px] rounded-full h-[50px] object-cover" alt="user_profile" width={50} height={50} />
                                     <div className="flex flex-col">
@@ -28,7 +29,19 @@ const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, p
                                 <Image src={`/assets/${platformLogo}`} alt={platform} width={50} height={50} className="w-[45px] rounded-full h-[45px] object-cover" />
                             </div>
                             <p className="my-3">{postContent}</p>
-                            {/* {images?.map((item, index: number) => <Image key={index} src={item} className="w-full rounded-md h-[300px] border object-cover" alt="" width={0} height={0} />)} */}
+
+                            {
+                                platform === TABS[0] ?
+                                    (showwcasePostImages && showwcasePostImages.map((postImage) => (
+                                        <img key={postImage} src={postImage} alt="post_image" loading='lazy' className='bg-gray-500 w-full rounded-md h-[300px] border object-cover' />
+                                    ))) : (twitterPostImages && twitterPostImages.map((twitterPostImage) => {
+                                        const { url, preview_image_url } = twitterPostImage
+                                        return (
+                                            <img key={url || preview_image_url} src={url || preview_image_url} alt="post_image" loading='lazy' className='bg-gray-500' />
+                                        )
+                                    }))
+                            }
+
                             <ul className='flex gap-3'>
                                 <li className="flex items-center gap-1">
                                     <AiTwotoneHeart className="text-red-400" size={17} />
@@ -51,21 +64,3 @@ const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, p
 export default ThreadTemplate
 
 
-
-// {
-//     selectedPlatform === "showwcase" ?
-//         (postImages && postImages.map((postImage) => (
-//             <img key={postImage} src={postImage} alt="post_image" loading='lazy' className='bg-gray-500' />
-//         ))) : (twitterPostImages && twitterPostImages.map((twitterPostImage) => {
-//             const { url, preview_image_url } = twitterPostImage
-//             return (
-//                 <img key={url || preview_image_url} src={url || preview_image_url} alt="post_image" loading='lazy' className='bg-gray-500' />
-//             )
-//         }))
-// }
-// {
-//     selectedPlatform === "showwcase" ? (
-//         // showwcaseLinkPreview &&
-//         (<ThreadLink title={showwcaseLinkPreview.title || "djfdjf"} images={showwcaseLinkPreview.images} description={showwcaseLinkPreview.description} link={showwcaseLinkPreview.url} />)
-//     ) : <></>
-// }
