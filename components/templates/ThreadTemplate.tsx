@@ -27,13 +27,13 @@ const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, p
                                 <Image src={`/assets/${platformLogo}`} alt={platform} width={50} height={50} className="w-[45px] rounded-full h-[45px] object-cover" />
                             </div>
                             <p className="my-3">{postContent}</p>
-                            <div className={`grid  grid-cols-2 gap-1`} id={(showwcasePostImages?.length === 3 || twitterPostImages?.length === 3) ? "three-images" : ""} >
+                            <div className={`grid ${(showwcasePostImages?.length === 1 || twitterPostImages?.length === 1) ? " " :"grid-cols-2"} gap-1`} id={(showwcasePostImages?.length === 3 || twitterPostImages?.length === 3) ? "three-images" : ""} >
 
 
                                 {
                                     platform === TABS[0] ?
                                         (showwcasePostImages && showwcasePostImages.map((postImage) => (
-                                            <img key={postImage} src={postImage} alt="post_image" loading='lazy' className={`bg-gray-500  w-full rounded-md  border object-cover ${(showwcasePostImages?.length === 2 || twitterPostImages?.length === 2) ? "h-[280px]" :" max-h-[370px] "}`} />
+                                            <img key={postImage} src={postImage} alt="post_image" loading='lazy' className={`bg-gray-500  w-full rounded-md  border object-cover ${(showwcasePostImages?.length === 2 || twitterPostImages?.length === 2) ? "h-[280px] w-[250px]" :" max-h-[370px] "}`} />
                                         ))) :
                                         (twitterPostImages && twitterPostImages.map((twitterPostImage) => {
                                             const { url, preview_image_url } = twitterPostImage
