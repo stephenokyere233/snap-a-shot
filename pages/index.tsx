@@ -39,12 +39,14 @@ export default function Home() {
     if (link.includes(LinksToCheck[0])) {
       const showwcaseLinkArray = link.split(LinksToCheck[0])
       setIsValidShowwcaseLink(true)
+      setIsValidTwitterLink(false)
       const showwcaseThreadID = showwcaseLinkArray[1]
       setThreadID(showwcaseThreadID)
       console.log("valid showwcase link")
     } else if (link.includes(LinksToCheck[1]) && link.includes("/status/")) {
       const linkArray = link.split("/status/")
       setIsValidTwitterLink(true)
+      setIsValidShowwcaseLink(false)
       const newTwitterPostID = linkArray[1]
       setThreadID(newTwitterPostID)
       console.log("valid twitter link")
