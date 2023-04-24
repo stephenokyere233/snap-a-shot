@@ -20,6 +20,7 @@ export default function Home() {
   const [user, setUser] = useState<any>(null)
   const [thread, setThread] = useState<any>(null)
   const [tweetInfo, setTweetInfo] = useState<any>(null)
+  const [threadInfo, setThreadInfo] = useState<any>(null)
   const [loading, setLoading] = useState<boolean>(false)
   const [threadID, setThreadID] = useState<string | null>(null)
   const [isValidShowwcaseLink, setIsValidShowwcaseLink] = useState<boolean>(false)
@@ -138,12 +139,6 @@ export default function Home() {
       });
   }
 
-
-  useEffect(() => {
-    console.log(platform)
-    console.log(link)
-  }, [platform, link])
-
   const fetchTwitterPost = async (twitterPostID: string) => {
     setLoading(true)
     try {
@@ -160,20 +155,20 @@ export default function Home() {
     }
   }
 
-  const fetchThreadOwner = (username: string) => {
-    setLoading(true)
-    const options = {
-      method: 'GET',
-      url: 'https://cache.showwcase.com/user/' + username,
-    };
+  // const fetchThreadOwner = (username: string) => {
+  //   setLoading(true)
+  //   const options = {
+  //     method: 'GET',
+  //     url: 'https://cache.showwcase.com/user/' + username,
+  //   };
 
-    axios.request(options).then(function (response) {
-      console.log(response.data);
-      setUser(response.data)
-    }).catch(function (error) {
-      console.error(error);
-    });
-  }
+  //   axios.request(options).then(function (response) {
+  //     console.log(response.data);
+  //     setUser(response.data)
+  //   }).catch(function (error) {
+  //     console.error(error);
+  //   });
+  // }
 
   const fetchThread = (threadID: string) => {
     setLoading(true)
@@ -184,8 +179,8 @@ export default function Home() {
 
     axios.request(options).then(function (response) {
       console.log(response.data);
-      fetchThreadOwner(response.data.user.username)
-      setThread(response.data)
+      // fetchThreadOwner(response.data.user.username) 
+      setThreadInfo(response.data)
       setLoading(false)
       setIsShowwcaseDataFetched(true)
     }).catch(function (error) {
@@ -221,11 +216,15 @@ export default function Home() {
         <Resizer>
           <section style={{ background: background }} id="shot" className="transition-all w-full h-full p-20 flex justify-center items-center bg-cover object-cover bg-no-repeat">
             {
+              // IF SELECTED TAB IS SHOWCASE
               platform === TABS[0] ?
-                (!isShowwcaseDataFetched ? <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} /> : <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={user?.profilePictureUrl} displayName={user?.displayName} username={user?.username} postContent={thread?.message} likeCount={thread?.totalUpvotes} replyCount={thread?.totalReplies} platform={TABS[0]} showwcasePostImages={thread.images} />) : (!isTwitterDataFetched ?
+                (!isShowwcaseDataFetched ? <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} /> :
+                  <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={threadInfo.user.profilePictureKey} displayName={threadInfo.user.displayName} username={threadInfo.user.username} postContent={threadInfo.message} likeCount={threadInfo.totalUpvotes} replyCount={threadInfo.totalReplies} platform={TABS[0]} showwcasePostImages={threadInfo.images} showwcaseUserEmoji={threadInfo.user.activity.emoji}/>) :
+                // IF SELECTED TAB IS TWITTER
+                (!isTwitterDataFetched ?
                   <ThreadTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[1]} /> : <ThreadTemplate platformLogo="twitter.svg" platform={TABS[1]} isLoading={loading} profileUrl={tweetInfo.includes.users[0].profile_image_url} displayName={tweetInfo.includes.users[0].name}
                     username={tweetInfo.includes.users[0].username} postContent={tweetInfo.data.text.split("https://t.co/")[0]} likeCount={tweetInfo.data.public_metrics.like_count} replyCount={tweetInfo.data.public_metrics?.reply_count}
-                    twitterPostImages={tweetInfo.includes.media}
+                    twitterPostImages={tweetInfo.includes.media} verifiedTwitter={tweetInfo.includes.users[0].verified}
                   />)
             }
           </section>
@@ -234,7 +233,7 @@ export default function Home() {
 
       <div className="flex justify-center fixed bottom-0 w-screen py-5">
         <div className="relative shadow-xl w-max rounded-xl">
-          {/* Color Picker */}
+          {/* COLOR PICKER */}
           {showBackgroundPicker && <div onMouseLeave={() => setShowBackgroundPicker(false)} className="absolute flex gap-5 shadow-md p-5 rounded-md w-max bottom-[7rem] z-10 bg-white left-0">
             <div>
               <b className='mb-3 block'>Background color</b>
@@ -249,9 +248,9 @@ export default function Home() {
               </ul>
             </div>
           </div>}
-          {/* Color Picker */}
+          {/* COLOR PICKER */}
 
-          {/* ControlBox */}
+          {/* CONTROLBOX */}
           <ul className="p-3 flex items-center gap-2 bg-white rounded-xl">
             <li className="select-none relative flex flex-col items-center cursor-pointer hover:bg-gray-50 transition-all py-3 gap-1 px-5 rounded-md hover:text-blue-400 text-gray-500" onClick={() => setShowBackgroundPicker(!showBackgroundPicker)}>
               <IoEyedropSharp />
@@ -266,7 +265,7 @@ export default function Home() {
               <p>Copy</p>
             </li>
           </ul>
-          {/* ControlBox */}
+          {/* CONTROLBOX */}
         </div>
       </div>
     </main>

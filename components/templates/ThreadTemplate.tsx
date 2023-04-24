@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import  { FC } from 'react'
+import { FC } from 'react'
 import { FaCommentDots } from 'react-icons/fa'
 import Loader from '../loader'
 import Image from 'next/image'
@@ -7,7 +7,7 @@ import { TthreadProps } from '@/types'
 import { AiTwotoneHeart } from 'react-icons/ai'
 import { TABS } from '@/constants/tabs'
 
-const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, profileUrl, displayName, username, postContent, likeCount, replyCount, showwcasePostImages, twitterPostImages }) => {
+const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, profileUrl, displayName, username, postContent, likeCount, replyCount, showwcasePostImages, twitterPostImages, showwcaseUserEmoji, verifiedTwitter }) => {
 
 
     return (
@@ -20,20 +20,21 @@ const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, p
                                 <div className="flex gap-2 items-center">
                                     <img src={profileUrl} className="w-[50px] rounded-full h-[50px] object-cover" alt="user_profile" width={50} height={50} />
                                     <div className="flex flex-col">
-                                        <b>{displayName}</b>
+                                        <span className='flex gap-1'>
+                                            <b>{displayName}</b>
+                                            {platform === TABS[0] ? (showwcaseUserEmoji && <p>{showwcaseUserEmoji}</p>) : (verifiedTwitter && <img src="../assets/verified.svg" width={20} height={20} alt="verified_badge" />)}
+                                        </span>
                                         <small className="text-gray-500">@{username}</small>
                                     </div>
                                 </div>
                                 <Image src={`/assets/${platformLogo}`} alt={platform} width={50} height={50} className="w-[45px] rounded-full h-[45px] object-cover" />
                             </div>
                             <p className="my-3">{postContent}</p>
-                            <div className={`grid ${(showwcasePostImages?.length === 1 || twitterPostImages?.length === 1) ? " " :"grid-cols-2"} gap-1`} id={(showwcasePostImages?.length === 3 || twitterPostImages?.length === 3) ? "three-images" : ""} >
-
-
+                            <div className={`grid ${(showwcasePostImages?.length === 1 || twitterPostImages?.length === 1) ? " " : "grid-cols-2"} gap-1`} id={(showwcasePostImages?.length === 3 || twitterPostImages?.length === 3) ? "three-images" : ""} >
                                 {
                                     platform === TABS[0] ?
                                         (showwcasePostImages && showwcasePostImages.map((postImage) => (
-                                            <img key={postImage} src={postImage} alt="post_image" loading='lazy' className={`bg-gray-500  w-full rounded-md  border object-cover ${(showwcasePostImages?.length === 2 || twitterPostImages?.length === 2) ? "h-[280px] w-[250px]" :" max-h-[370px] "}`} />
+                                            <img key={postImage} src={postImage} alt="post_image" loading='lazy' className={`bg-gray-500  w-full rounded-md  border object-contain bg-contain ${(showwcasePostImages?.length === 2 || twitterPostImages?.length === 2) ? "h-[280px] w-[250px]" : " max-h-[370px] "}`} />
                                         ))) :
                                         (twitterPostImages && twitterPostImages.map((twitterPostImage) => {
                                             const { url, preview_image_url } = twitterPostImage
@@ -43,7 +44,6 @@ const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, p
                                         }))
                                 }
                             </div>
-
                             <ul className='flex gap-3 pt-3'>
                                 <li className="flex items-center gap-1">
                                     <AiTwotoneHeart className="text-red-400" size={17} />
