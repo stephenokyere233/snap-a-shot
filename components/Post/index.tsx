@@ -1,5 +1,6 @@
 import Image from "next/image"
 import { FC } from "react"
+import { AiTwotoneHeart } from 'react-icons/ai'
 
 interface IPost {
     platformLogo: string
@@ -19,13 +20,19 @@ const Post: FC<IPost> = ({ platformLogo, platform, loading, name, username, cont
                     <Image src="/assets/avatar.svg" className="w-[50px] rounded-full h-[50px] object-cover" alt="user_profile" width={50} height={50} />
                     <div className="flex flex-col">
                         <b>{name}</b>
-                        <small>@{username}</small>
+                        <small className="text-gray-500">@{username}</small>
                     </div>
                 </div>
                 <Image src={`/assets/${platformLogo}`} alt={platform} width={30} height={30} className="w-[30px] rounded-full h-[30px] object-cover" />
             </div>
             <p className="my-3">{content}</p>
             {images?.map((item, index: number) => <Image key={index} src={item} className="w-full rounded-md h-[300px] border object-cover" alt="" width={0} height={0} />)}
+            <ul>
+                <li className="flex items-center gap-1">
+                    <AiTwotoneHeart className="text-red-400" size={17} />
+                    <p className="text-gray-600 text-sm">23.7K</p>
+                </li>
+            </ul>
         </div>
     )
 }

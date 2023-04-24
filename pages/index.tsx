@@ -35,85 +35,6 @@ export default function Home() {
     "https://www.showwcase.com/thread/", "https://twitter.com/"
   ]
 
-  // const fetchTwitterPost = async (twitterPostID: string) => {
-  //   setLoading(true)
-  //   try {
-  //     const response = await axios.get(`/api/fetchTweet?twitterPostID=${twitterPostID}`);
-  //     console.log(response.data);
-  //     setIsTwitterDataFetched(true)
-  //     console.log(response.data)
-  //     setTweetInfo(response.data)
-  //     setLoading(false)
-  //   } catch (error) {
-  //     setLoading(false)
-  //     console.error(error);
-  //     setLoading(false)
-  //   }
-  // }
-
-  // const fetchThreadOwner = (username: string) => {
-  //   setLoading(true)
-  //   const options = {
-  //     method: 'GET',
-  //     url: 'https://cache.showwcase.com/user/' + username,
-  //   };
-
-  //   axios.request(options).then(function (response) {
-  //     console.log(response.data);
-  //     setUser(response.data)
-  //   }).catch(function (error) {
-  //     console.error(error);
-  //   });
-  // }
-
-  // const fetchThread = (threadID: string) => {
-  //   setLoading(true)
-  //   const options = {
-  //     method: 'GET',
-  //     url: 'https://cache.showwcase.com/threads/' + threadID,
-  //   };
-
-  //   axios.request(options).then(function (response) {
-  //     console.log(response.data);
-  //     fetchThreadOwner(response.data.user.username)
-  //     setThread(response.data)
-  //     setLoading(false)
-  //     setIsShowwcaseDataFetched(true)
-  //   }).catch(function (error) {
-  //     console.error(error);
-  //     setLoading(false)
-  //   })
-  // }
-
-
-  // const checkValidity = async (link: string | null) => {
-  //   if (!link) return
-  //   if (link.includes(LinksToCheck[0])) {
-  //     const showwcaseLinkArray = link.split(LinksToCheck[0])
-  //     setIsValidShowwcaseLink(true)
-  //     const showwcaseThreadID = showwcaseLinkArray[1]
-  //     setThreadID(showwcaseThreadID)
-  //     console.log("valid showwcase link")
-  //   }
-  //   else if (link.includes(LinksToCheck[1]) && link.includes("/status/")) {
-  //     const linkArray = link.split("/status/")
-  //     setIsValidTwitterLink(true)
-  //     const newTwitterPostID = linkArray[1]
-  //     setThreadID(newTwitterPostID)
-  //     console.log("valid twitter link")
-  //   }
-  //   else {
-  //     if (selectedPlatform === availablePlatForms[0]) {
-  //       setIsValidShowwcaseLink(false)
-  //       console.log("invalid showwcase link")
-  //     }
-  //     else {
-  //       setIsValidTwitterLink(false)
-  //       console.log("invalid twitter link")
-  //     }
-  //   }
-  // }
-
   useEffect(() => {
     setError(false)
     setErrorMessage(null)
@@ -297,8 +218,7 @@ export default function Home() {
       const showwcaseThreadID = showwcaseLinkArray[1]
       setThreadID(showwcaseThreadID)
       console.log("valid showwcase link")
-    }
-    else if (link.includes(LinksToCheck[1]) && link.includes("/status/")) {
+    } else if (link.includes(LinksToCheck[1]) && link.includes("/status/")) {
       const linkArray = link.split("/status/")
       setIsValidTwitterLink(true)
       const newTwitterPostID = linkArray[1]
@@ -309,8 +229,7 @@ export default function Home() {
       if (selectedPlatform === availablePlatForms[0]) {
         setIsValidShowwcaseLink(false)
         console.log("invalid showwcase link")
-      }
-      else {
+      } else {
         setIsValidTwitterLink(false)
         console.log("invalid twitter link")
       }
@@ -335,14 +254,8 @@ export default function Home() {
       <div className="flex items-center justify-center pb-44">
         <Resizer>
           <section style={{ background: background }} id="shot" className="transition-all w-full h-full p-20 flex justify-center items-center bg-cover object-cover bg-no-repeat">
-
-            {/* {platform === availablePlatForms[0] ?
-                (!isShowwcaseDataFetched ? <DummyTemplate platformLogo={`${platform}.svg`} platform={platform} isLoading={loading} /> : <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={user?.profilePictureUrl} displayName={user?.displayName} username={user?.username} postText={thread?.message} likeCount={thread?.totalUpvotes} replyCount={thread?.totalReplies} platform={availablePlatForms[1]} />) : (!isTwitterDataFetched ?
-                  <DummyTemplate platformLogo={`${platform}.svg`} platform={platform} isLoading={loading} /> : <ThreadTemplate platformLogo="twitter.svg" platform={availablePlatForms[1]} isLoading={loading} profileUrl={tweetInfo.includes.users[0].profile_image_url} displayName={tweetInfo.includes.users[0].name}
-                    username={tweetInfo.includes.users[0].username} postText={tweetInfo.data.text} likeCount={tweetInfo.data.public_metrics.like_count} replyCount={tweetInfo.data.public_metrics?.reply_count}
-                  />)} */}
-
-            <Post platformLogo={""} platform={""} name={""} username={""} content={""} />
+            {!link ? <Post platformLogo={`${platform}.svg`} platform={platform} name='John Doe' username='johndoe' content='A social platform for remote workers: With the increase in remote work, there is a need for social platforms that cater to remote workers.' />
+              : <Post platformLogo='' platform='' name='' username='' content='' />}
           </section>
         </Resizer>
       </div>
@@ -380,50 +293,5 @@ export default function Home() {
         </div>
       </div>
     </main>
-
-    // <div className="min-h-screen w-full bg-[#2221] text-[#222] flex flex-col">
-    //   <header className="flex flex-col lg:flex-row items-center justify-between p-4 px-10">
-
-    //     <h1 className="font-bold text-xl flex items-center gap-2">
-    //       <BiCamera size={32} color="blue" />
-    //       SNAP-A-SHOT</h1>
-    //     <div className="block absolute right-4 lg:hidden"><BiMoon size={28} /></div>
-    //     <form onSubmit={handleSubmit}>
-    //       <input className="w-[400px] indent-4 p-3 outline-none border-2 rounded-lg bg-transparent" type="text" placeholder="Paste Showwcase thread link here" value={link} onChange={handleChange} />
-    //       {
-    //         error &&
-    //         <p className="text-red-500 text-center capitalize">{errorMessage}</p>
-    //       }
-    //     </form>
-    //     <div className="hidden lg:block"><BiMoon size={28} /></div>
-    //   </header>
-    //   <div className="flex gap-4 justify-center items-center">
-    //     <button onClick={() => setSelectedPlatform(availablePlatForms[0])} className={`rounded-md p-2 border ${selectedPlatform === availablePlatForms[0] && "border-blue-700"}`}>Showwcase</button>
-    //     <button onClick={() => setSelectedPlatform(availablePlatForms[1])} className={`rounded-md p-2 border ${selectedPlatform === availablePlatForms[1] && "border-blue-700"}`}>Twitter</button>
-
-    //   </div>
-    //   <main className="flex-1 flex flex-col justify-center items-center overflow-y-scroll relative">
-
-    // <Resizer>
-    //   <section style={{ background: selectedBGColor }} id="shot" className=" w-full h-full p-20 flex justify-center items-center bg-cover object-cover bg-no-repeat">
-    //     <div className={`border w-[400px] min-w-[320px] max-w-[650px] p-6  bg-white rounded-md relative ${loading ? "flex items-center justify-center" : ""}`}>
-    //       {
-    //         selectedPlatform === availablePlatForms[0] ?
-    //           (!isShowwcaseDataFetched ? <DummyTemplate platformLogo={`${selectedPlatform}.svg`} selectedPlatform={selectedPlatform} isLoading={loading} /> : <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={user?.profilePictureUrl} displayName={user?.displayName} username={user?.username} postText={thread?.message} likeCount={thread?.totalUpvotes} replyCount={thread?.totalReplies} selectedPlatform={availablePlatForms[1]} />) : (!isTwitterDataFetched ?
-    //             <DummyTemplate platformLogo={`${selectedPlatform}.svg`} selectedPlatform={selectedPlatform} isLoading={loading} /> : <ThreadTemplate platformLogo="twitter.svg" selectedPlatform={availablePlatForms[1]} isLoading={loading} profileUrl={tweetInfo.includes.users[0].profile_image_url} displayName={tweetInfo.includes.users[0].name}
-    //               username={tweetInfo.includes.users[0].username} postText={tweetInfo.data.text} likeCount={tweetInfo.data.public_metrics.like_count} replyCount={tweetInfo.data.public_metrics?.reply_count}
-    //             />)
-    //       }
-    //     </div>
-    //   </section>
-    // </Resizer>
-    //     <ControlBox />
-    //   </main>
-    //   <footer className="h-16 flex items-center justify-center">
-    //     <p>
-    //       &copy;Copyright 2023 @dev__steve
-    //     </p>
-    //   </footer>
-    // </div>
   )
 }
