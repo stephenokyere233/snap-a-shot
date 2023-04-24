@@ -5,52 +5,66 @@ import { FiHeart } from 'react-icons/fi'
 import Loader from '../loader'
 import Image from 'next/image'
 import { TthreadProps } from '@/types'
+import Link from 'next/link'
+import { AiTwotoneHeart } from 'react-icons/ai'
+import { TABS } from '@/constants/tabs'
 
-const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, selectedPlatform, isLoading, profileUrl, displayName, username, postText, likeCount, replyCount, postImages, twitterPostImages }) => {
+const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, profileUrl, displayName, username, postContent, likeCount, replyCount, showwcasePostImages, twitterPostImages }) => {
+
 
     return (
         <div>
-            <Image src={`/assets/${platformLogo}`} alt={selectedPlatform} width={200} height={200} className="w-12 rounded-full h-12 object-cover top-0 m-2 absolute right-0" />
-            {
-                isLoading ? <Loader /> : (<>
-                    <div className="flex items-center gap-2 pb-2">
-                        <img src={profileUrl} className="w-16 rounded-full h-16 object-cover" alt="user_profile" loading='lazy' />
-                        <div className="flex flex-col">
-                            <div className="text-xl font-semibold">
-                                <h2>
-                                    {displayName}
-                                </h2>
-                            </div>
-                            <span className="opacity-70">
-                                @{username}
-                            </span>
-                        </div>
-                    </div>
-                    <p className="">
-                        {
-                            postText
-                        }
-                    </p>
+            <>
+                <div className={`border min-w-[400px] max-w-[650px] p-6 bg-white shadow-2xl rounded-2xl relative ${isLoading ? "flex items-center justify-center" : ""}`}>
                     {
-                        selectedPlatform === "showwcase" ?
-                            (postImages && postImages.map((postImage) => (
-                                <img key={postImage} src={postImage} alt="post_image" loading='lazy' className='bg-gray-500' />
-                            ))) : (twitterPostImages && twitterPostImages.map((twitterPostImage) => {
-                                const { url, preview_image_url } = twitterPostImage
-                                return (
-                                    <img key={url || preview_image_url} src={url || preview_image_url} alt="post_image" loading='lazy' className='bg-gray-500' />
-                                )
-                            }))
+                        isLoading ? <Loader /> : (<>
+                            <div className="flex justify-between  items-center">
+                                <div className="flex gap-2 items-center">
+                                    <img src={profileUrl} className="w-[50px] rounded-full h-[50px] object-cover" alt="user_profile" width={50} height={50} />
+                                    <div className="flex flex-col">
+                                        <b>{displayName}</b>
+                                        <small className="text-gray-500">@{username}</small>
+                                    </div>
+                                </div>
+                                <Image src={`/assets/${platformLogo}`} alt={platform} width={50} height={50} className="w-[45px] rounded-full h-[45px] object-cover" />
+                            </div>
+                            <p style={{ gridTemplateRows: "1fr 1fr" }} className="my-3">{postContent}</p>
+                            <div className={`grid  grid-cols-2 gap-1`} id={(showwcasePostImages?.length === 3 || twitterPostImages?.length === 3) ? "three-images" : ""} >
+
+
+                                {
+                                    platform === TABS[0] ?
+                                        (showwcasePostImages && showwcasePostImages.map((postImage) => (
+                                            <img key={postImage} src={postImage} alt="post_image" loading='lazy' className={`bg-gray-500  w-full rounded-md  border object-cover ${(showwcasePostImages?.length === 2 || twitterPostImages?.length === 2) ? "h-[280px]" :" max-h-[370px] "}`} />
+                                        ))) :
+                                        (twitterPostImages && twitterPostImages.map((twitterPostImage) => {
+                                            const { url, preview_image_url } = twitterPostImage
+                                            return (
+                                                <img key={url || preview_image_url} src={url || preview_image_url} alt="post_image" loading='lazy' className='bg-gray-500 w-full rounded-md max-h-[370px] border object-cover' />
+                                            )
+                                        }))
+                                }
+                            </div>
+
+                            <ul className='flex gap-3 pt-3'>
+                                <li className="flex items-center gap-1">
+                                    <AiTwotoneHeart className="text-red-400" size={17} />
+                                    <p className="text-gray-600 text-sm">{likeCount}</p>
+                                </li>
+                                <li className="flex items-center gap-1">
+                                    <FaCommentDots size={17} />
+                                    <p className="text-gray-600 text-sm">{replyCount}</p>
+                                </li>
+                            </ul></>)
                     }
-                    <div className="flex justify-end pt-2 text-lg items-center gap-2">
-                        <div className="flex items-center gap-2"><FiHeart color="red" />{likeCount}</div>
-                        <div className="flex items-center gap-2"><FaCommentDots />{replyCount}</div>
-                    </div>
-                </>
-                )
-            }
+
+                </div>
+            </>
+
         </div>
     )
 }
 
 export default ThreadTemplate
+
+

@@ -1,13 +1,13 @@
 export type TthreadProps = {
     platformLogo: string
-    selectedPlatform: string
     isLoading: boolean
     profileUrl: string
     displayName: string
     username: string
-    postText: string
+    postContent: string
     likeCount: number
     replyCount: number
-    postImages?:string[]
-    twitterPostImages?:any[]
+    showwcasePostImages?: any[]
+    twitterPostImages?: any[]
+    platform: string
 }
