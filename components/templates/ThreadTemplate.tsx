@@ -1,11 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { FC, useContext } from 'react'
+import  { FC } from 'react'
 import { FaCommentDots } from 'react-icons/fa'
-import { FiHeart } from 'react-icons/fi'
 import Loader from '../loader'
 import Image from 'next/image'
 import { TthreadProps } from '@/types'
-import Link from 'next/link'
 import { AiTwotoneHeart } from 'react-icons/ai'
 import { TABS } from '@/constants/tabs'
 
@@ -28,7 +26,7 @@ const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, p
                                 </div>
                                 <Image src={`/assets/${platformLogo}`} alt={platform} width={50} height={50} className="w-[45px] rounded-full h-[45px] object-cover" />
                             </div>
-                            <p style={{ gridTemplateRows: "1fr 1fr" }} className="my-3">{postContent}</p>
+                            <p className="my-3">{postContent}</p>
                             <div className={`grid  grid-cols-2 gap-1`} id={(showwcasePostImages?.length === 3 || twitterPostImages?.length === 3) ? "three-images" : ""} >
 
 

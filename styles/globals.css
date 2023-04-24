@@ -109,8 +109,6 @@
 }
 
 #three-images img:nth-child(1) {
-  /* background: red; */
-  /* display: none; */
   height: 100%;
   grid-row: 1/3;
 }
