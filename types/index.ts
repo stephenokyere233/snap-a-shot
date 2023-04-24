@@ -8,4 +8,6 @@ export type TthreadProps = {
     postText: string
     likeCount: number
     replyCount: number
+    postImages?:string[]
+    twitterPostImages?:any[]
 }

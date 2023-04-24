@@ -92,6 +92,8 @@ export default function Home() {
     if (link.includes(LinksToCheck[0])) {
       const showwcaseLinkArray = link.split(LinksToCheck[0])
       setIsValidShowwcaseLink(true)
+      setIsValidTwitterLink(false)
+
       const showwcaseThreadID = showwcaseLinkArray[1]
       setThreadID(showwcaseThreadID)
       console.log("valid showwcase link")
@@ -99,6 +101,8 @@ export default function Home() {
     else if (link.includes(LinksToCheck[1]) && link.includes("/status/")) {
       const linkArray = link.split("/status/")
       setIsValidTwitterLink(true)
+      setIsValidShowwcaseLink(false)
+
       const newTwitterPostID = linkArray[1]
       setThreadID(newTwitterPostID)
       console.log("valid twitter link")
@@ -106,10 +110,14 @@ export default function Home() {
     else {
       if (selectedPlatform === availablePlatForms[0]) {
         setIsValidShowwcaseLink(false)
+        // setIsValidTwitterLink(false)
+
         console.log("invalid showwcase link")
       }
       else {
         setIsValidTwitterLink(false)
+        // setIsValidShowwcaseLink(false)
+
         console.log("invalid twitter link")
       }
     }
@@ -120,8 +128,12 @@ export default function Home() {
     setErrorMessage(null)
     if (link) {
       checkValidity(link)
+      console.log("twitter", isValidTwitterLink)
+      console.log("showwcase", isValidShowwcaseLink)
       console.log("valid here", link)
+
     }
+
   }, [selectedPlatform])
 
 
@@ -132,22 +144,30 @@ export default function Home() {
   }
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
+    console.log("this is a link submit now")
+    console.log(selectedPlatform)
     if (!link) {
       setError(true)
       setErrorMessage("Please paste in a link")
       return
     }
+    console.log("showwcase",isValidShowwcaseLink)
+    console.log("twitter", isValidTwitterLink)
 
     if (isValidShowwcaseLink && !isValidTwitterLink) {
+      console.log("isValidShowwcaseLink && NOT isValidTwitterLink")
       if (selectedPlatform === availablePlatForms[1]) {
         setSelectedPlatform(availablePlatForms[0])
         fetchThread(threadID as string)
+        console.log("isValidShowwcaseLink && NOT isValidTwitterLink && selectedPlatform === twitter")
         setError(false)
         setErrorMessage(null)
       }
       else if (selectedPlatform === availablePlatForms[0]) {
         fetchThread(threadID as string)
         setError(false)
+
+        console.log("selcted one show")
         setErrorMessage(null)
       }
 
@@ -161,6 +181,8 @@ export default function Home() {
         setErrorMessage(null)
       }
       else if (selectedPlatform === availablePlatForms[1]) {
+        // setSelectedPlatform(availablePlatForms[0])
+        console.log("running show lin on tweet tab..move to show")
         fetchTwitterPost(threadID as string)
         setError(false)
         setErrorMessage(null)
@@ -305,8 +327,8 @@ export default function Home() {
         <div className="hidden lg:block"><BiMoon size={28} /></div>
       </header>
       <div className="flex gap-4 justify-center items-center">
-        <button onClick={() => setSelectedPlatform(availablePlatForms[0])} className={`rounded-md p-2 border ${selectedPlatform === availablePlatForms[0] && "border-blue-700"}`}>Showwcase</button>
-        <button onClick={() => setSelectedPlatform(availablePlatForms[1])} className={`rounded-md p-2 border ${selectedPlatform === availablePlatForms[1] && "border-blue-700"}`}>Twitter</button>
+        <button onClick={() => {setSelectedPlatform(availablePlatForms[0])}} className={`rounded-md p-2 border ${selectedPlatform === availablePlatForms[0] && "border-blue-700"}`}>Showwcase</button>
+        <button onClick={() => {setSelectedPlatform(availablePlatForms[1])}} className={`rounded-md p-2 border ${selectedPlatform === availablePlatForms[1] && "border-blue-700"}`}>Twitter</button>
 
       </div>
       <main className="flex-1 flex flex-col justify-center items-center overflow-y-scroll relative">
@@ -316,9 +338,10 @@ export default function Home() {
             <div className={`border w-[400px] min-w-[320px] max-w-[650px] p-6  bg-white rounded-md relative ${loading ? "flex items-center justify-center" : ""}`}>
               {
                 selectedPlatform === availablePlatForms[0] ?
-                  (!isShowwcaseDataFetched ? <DummyTemplate platformLogo={`${selectedPlatform}.svg`} selectedPlatform={selectedPlatform} isLoading={loading} /> : <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={user?.profilePictureUrl} displayName={user?.displayName} username={user?.username} postText={thread?.message} likeCount={thread?.totalUpvotes} replyCount={thread?.totalReplies} selectedPlatform={availablePlatForms[1]} />) : (!isTwitterDataFetched ?
+                  (!isShowwcaseDataFetched ? <DummyTemplate platformLogo={`${selectedPlatform}.svg`} selectedPlatform={selectedPlatform} isLoading={loading} /> : <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={user?.profilePictureUrl} displayName={user?.displayName} username={user?.username} postText={thread?.message} likeCount={thread?.totalUpvotes} replyCount={thread?.totalReplies} selectedPlatform={availablePlatForms[1]} postImages={thread.images} />) : (!isTwitterDataFetched ?
                     <DummyTemplate platformLogo={`${selectedPlatform}.svg`} selectedPlatform={selectedPlatform} isLoading={loading} /> : <ThreadTemplate platformLogo="twitter.svg" selectedPlatform={availablePlatForms[1]} isLoading={loading} profileUrl={tweetInfo.includes.users[0].profile_image_url} displayName={tweetInfo.includes.users[0].name}
-                      username={tweetInfo.includes.users[0].username} postText={tweetInfo.data.text} likeCount={tweetInfo.data.public_metrics.like_count} replyCount={tweetInfo.data.public_metrics?.reply_count}
+                      username={tweetInfo.includes.users[0].username} postText={tweetInfo.data.text.split("https://t.co/")[0]} likeCount={tweetInfo.data.public_metrics.like_count} replyCount={tweetInfo.data.public_metrics?.reply_count}
+                      twitterPostImages={tweetInfo.includes.media}
                     />)
               }
             </div>
