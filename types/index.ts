@@ -12,4 +12,6 @@ export type TthreadProps = {
     platform: string
     showwcaseUserEmoji?:string
     verifiedTwitter?:boolean
+    datePosted:string
+    showwwcaseMentions?:any[]
 }

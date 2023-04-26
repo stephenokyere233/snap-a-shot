@@ -116,3 +116,7 @@
 #three-images img:nth-child(3) {
   height: 180px;
 }
+
+a{
+  color: #42A5F5;
+}

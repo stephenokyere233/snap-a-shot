@@ -1,14 +1,28 @@
 /* eslint-disable @next/next/no-img-element */
 import { FC } from 'react'
-import { FaCommentDots } from 'react-icons/fa'
+import { FaRegComment } from 'react-icons/fa'
 import Loader from '../loader'
 import Image from 'next/image'
 import { TthreadProps } from '@/types'
 import { AiTwotoneHeart } from 'react-icons/ai'
 import { TABS } from '@/constants/tabs'
+import formatDate from '@/utils/formatDate.util'
+import linkifyUsernames from '@/utils/formatPostContent.util'
 
-const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, profileUrl, displayName, username, postContent, likeCount, replyCount, showwcasePostImages, twitterPostImages, showwcaseUserEmoji, verifiedTwitter }) => {
+const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, profileUrl, displayName, username, postContent, likeCount, replyCount, showwcasePostImages, twitterPostImages, showwcaseUserEmoji, verifiedTwitter, datePosted }) => {
 
+
+    const ThreadLink: FC<{ title: string, description: string }> = ({ title, description }) => {
+        return (
+            <div>
+                <Image src="https://pbs.twimg.com/media/FugVWNgWIBM-4mp.jpg" alt="threadlink" width={200} height={200} />
+                <div>
+                    <h2>{title}</h2>
+                    <p>{description}</p>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div>
@@ -29,7 +43,7 @@ const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, p
                                 </div>
                                 <Image src={`/assets/${platformLogo}`} alt={platform} width={50} height={50} className="w-[45px] rounded-full h-[45px] object-cover" />
                             </div>
-                            <p className="my-3">{postContent}</p>
+                            <p className="my-3" dangerouslySetInnerHTML={{ __html: linkifyUsernames(postContent) }} />
                             <div className={`grid ${(showwcasePostImages?.length === 1 || twitterPostImages?.length === 1) ? " " : "grid-cols-2"} gap-1`} id={(showwcasePostImages?.length === 3 || twitterPostImages?.length === 3) ? "three-images" : ""} >
                                 {
                                     platform === TABS[0] ?
@@ -43,17 +57,29 @@ const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, p
                                             )
                                         }))
                                 }
+                                {
+                                    platform === TABS[0] ? <></> : (
+                                        <></>
+                                    )
+                                }
                             </div>
-                            <ul className='flex gap-3 pt-3'>
-                                <li className="flex items-center gap-1">
-                                    <AiTwotoneHeart className="text-red-400" size={17} />
-                                    <p className="text-gray-600 text-sm">{likeCount}</p>
-                                </li>
-                                <li className="flex items-center gap-1">
-                                    <FaCommentDots size={17} />
-                                    <p className="text-gray-600 text-sm">{replyCount}</p>
-                                </li>
-                            </ul></>)
+                            <div className='flex justify-between items-center mt-3'>
+                                <ul className='flex gap-3 '>
+                                    <li className="flex items-center gap-1">
+                                        <AiTwotoneHeart className="text-red-400" size={17} />
+                                        <p className="text-gray-600 text-sm">{likeCount}</p>
+                                    </li>
+                                    <li className="flex items-center gap-1">
+                                        <FaRegComment size={17} />
+                                        <p className="text-gray-600 text-sm">{replyCount}</p>
+                                    </li>
+                                </ul>
+                                <small className=''>
+                                    {formatDate(datePosted)}
+                                </small>
+                            </div>
+
+                        </>)
                     }
 
                 </div>
