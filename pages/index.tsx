@@ -155,20 +155,20 @@ export default function Home() {
     }
   }
 
-  // const fetchThreadOwner = (username: string) => {
-  //   setLoading(true)
-  //   const options = {
-  //     method: 'GET',
-  //     url: 'https://cache.showwcase.com/user/' + username,
-  //   };
+  const fetchThreadOwner = (username: string) => {
+    setLoading(true)
+    const options = {
+      method: 'GET',
+      url: 'https://cache.showwcase.com/user/' + username,
+    };
 
-  //   axios.request(options).then(function (response) {
-  //     console.log(response.data);
-  //     setUser(response.data)
-  //   }).catch(function (error) {
-  //     console.error(error);
-  //   });
-  // }
+    axios.request(options).then(function (response) {
+      console.log(response.data);
+      setUser(response.data)
+    }).catch(function (error) {
+      console.error(error);
+    });
+  }
 
   const fetchThread = (threadID: string) => {
     setLoading(true)
@@ -179,7 +179,7 @@ export default function Home() {
 
     axios.request(options).then(function (response) {
       console.log(response.data);
-      // fetchThreadOwner(response.data.user.username) 
+      fetchThreadOwner(response.data.user.username)
       setThreadInfo(response.data)
       setLoading(false)
       setIsShowwcaseDataFetched(true)
@@ -219,7 +219,8 @@ export default function Home() {
               // IF SELECTED TAB IS SHOWCASE
               platform === TABS[0] ?
                 (!isShowwcaseDataFetched ? <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} /> :
-                  <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={threadInfo.user.profilePictureKey} displayName={threadInfo.user.displayName} username={threadInfo.user.username} postContent={threadInfo.message} likeCount={threadInfo.totalUpvotes} replyCount={threadInfo.totalReplies} platform={TABS[0]} showwcasePostImages={threadInfo.images} showwcaseUserEmoji={threadInfo.user.activity.emoji} datePosted={threadInfo.createdAt
+                  <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={user?.profilePictureUrl
+                  } displayName={threadInfo.user.displayName} username={threadInfo.user.username} postContent={threadInfo.message} likeCount={threadInfo.totalUpvotes} replyCount={threadInfo.totalReplies} platform={TABS[0]} showwcasePostImages={threadInfo.images} showwcaseUserEmoji={threadInfo.user.activity.emoji} datePosted={threadInfo.createdAt
                   } />) :
                 // IF SELECTED TAB IS TWITTER
                 (!isTwitterDataFetched ?
