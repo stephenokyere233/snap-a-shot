@@ -7,13 +7,18 @@ import { AppContext } from "@/context";
 import { IAppContext } from "@/interfaces";
 import { FiDownload, FiSun } from "react-icons/fi";
 import { IoCopy, IoEyedropSharp } from "react-icons/io5";
+import { IoIosQuote } from "react-icons/io"
+import { VscExtensions } from "react-icons/vsc"
 import { TABS } from "@/constants/tabs"
 import { COLORS } from "@/constants/colors"
 import { GRADIENTS } from "@/constants/gradients"
 import { DUMMY_TEMP } from "@/constants/dummy_template"
+import QuoteTemplate from "@/components/templates/QuoteTemplate";
 
 export default function Home() {
   const [showBackgroundPicker, setShowBackgroundPicker] = useState(false)
+  const [showTemplateSelector, setShowTemplateSelector] = useState<boolean>(false)
+  const [selectedTemplate, setSelectedTemplate] = useState<string>("thread")
   const [background, setBackground] = useState(GRADIENTS[7])
   const [platform, setPlatform] = useState(TABS[0])
   const [link, setLink] = useState('')
@@ -217,17 +222,28 @@ export default function Home() {
           <section style={{ background: background }} id="shot" className="transition-all w-full h-full p-20 flex justify-center items-center bg-cover object-cover bg-no-repeat">
             {
               // IF SELECTED TAB IS SHOWCASE
-              platform === TABS[0] ?
-                (!isShowwcaseDataFetched ? <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} /> :
-                  <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={user?.profilePictureUrl
-                  } displayName={threadInfo.user.displayName} username={threadInfo.user.username} postContent={threadInfo.message} likeCount={threadInfo.totalUpvotes} replyCount={threadInfo.totalReplies} platform={TABS[0]} showwcasePostImages={threadInfo.images} showwcaseUserEmoji={threadInfo.user.activity.emoji} datePosted={threadInfo.createdAt
-                  } />) :
-                // IF SELECTED TAB IS TWITTER
-                (!isTwitterDataFetched ?
-                  <ThreadTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[1]} datePosted={new Date().toString()} /> : <ThreadTemplate platformLogo="twitter.svg" platform={TABS[1]} isLoading={loading} profileUrl={tweetInfo.includes.users[0].profile_image_url} displayName={tweetInfo.includes.users[0].name}
-                    username={tweetInfo.includes.users[0].username} postContent={tweetInfo.data.text} likeCount={tweetInfo.data.public_metrics.like_count} replyCount={tweetInfo.data.public_metrics?.reply_count}
-                    twitterPostImages={tweetInfo.includes.media} verifiedTwitter={tweetInfo.includes.users[0].verified} datePosted={tweetInfo.data.created_at}
-                  />)
+              selectedTemplate === "thread" ?
+                (platform === TABS[0] ?
+                  (!isShowwcaseDataFetched ? <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} /> :
+                    <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={user?.profilePictureUrl
+                    } displayName={threadInfo.user.displayName} username={threadInfo.user.username} postContent={threadInfo.message} likeCount={threadInfo.totalUpvotes} replyCount={threadInfo.totalReplies} platform={TABS[0]} showwcasePostImages={threadInfo.images} showwcaseUserEmoji={threadInfo.user.activity.emoji} datePosted={threadInfo.createdAt
+                    } />) :
+                  // IF SELECTED TAB IS TWITTER
+                  (!isTwitterDataFetched ?
+                    <ThreadTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[1]} datePosted={new Date().toString()} /> : <ThreadTemplate platformLogo="twitter.svg" platform={TABS[1]} isLoading={loading} profileUrl={tweetInfo.includes.users[0].profile_image_url} displayName={tweetInfo.includes.users[0].name}
+                      username={tweetInfo.includes.users[0].username} postContent={tweetInfo.data.text} likeCount={tweetInfo.data.public_metrics.like_count} replyCount={tweetInfo.data.public_metrics?.reply_count}
+                      twitterPostImages={tweetInfo.includes.media} verifiedTwitter={tweetInfo.includes.users[0].verified} datePosted={tweetInfo.data.created_at}
+                    />)) : (platform === TABS[0] ?
+                      (!isShowwcaseDataFetched ? <QuoteTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} /> :
+                        <QuoteTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={user?.profilePictureUrl
+                        } displayName={threadInfo.user.displayName} username={threadInfo.user.username} postContent={threadInfo.message} likeCount={threadInfo.totalUpvotes} replyCount={threadInfo.totalReplies} platform={TABS[0]} showwcasePostImages={threadInfo.images} showwcaseUserEmoji={threadInfo.user.activity.emoji} datePosted={threadInfo.createdAt
+                        } />) :
+                      // IF SELECTED TAB IS TWITTER
+                      (!isTwitterDataFetched ?
+                        <QuoteTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[1]} datePosted={new Date().toString()} /> : <QuoteTemplate platformLogo="twitter.svg" platform={TABS[1]} isLoading={loading} profileUrl={tweetInfo.includes.users[0].profile_image_url} displayName={tweetInfo.includes.users[0].name}
+                          username={tweetInfo.includes.users[0].username} postContent={tweetInfo.data.text} likeCount={tweetInfo.data.public_metrics.like_count} replyCount={tweetInfo.data.public_metrics?.reply_count}
+                          twitterPostImages={tweetInfo.includes.media} verifiedTwitter={tweetInfo.includes.users[0].verified} datePosted={tweetInfo.data.created_at}
+                        />))
             }
           </section>
         </Resizer>
@@ -250,6 +266,21 @@ export default function Home() {
               </ul>
             </div>
           </div>}
+          {showTemplateSelector && <div onMouseLeave={() => setShowTemplateSelector(false)} className="absolute flex gap-5 shadow-md p-5 rounded-md w-max bottom-[7rem] z-10 bg-white right-0">
+            <div>
+
+              <ul className="flex items-center gap-2 bg-white rounded-xl">
+                <li className="select-none relative flex flex-col items-center cursor-pointer hover:bg-gray-50 transition-all py-3 gap-1 px-5 rounded-md hover:text-blue-400 text-gray-500" onClick={()=>setSelectedTemplate("thread")}>
+                  <IoEyedropSharp />
+                  <p>Thread</p>
+                </li>
+                <li className="select-none relative flex flex-col items-center cursor-pointer hover:bg-gray-50 transition-all py-3 gap-1 px-5 rounded-md hover:text-blue-400 text-gray-500" onClick={() => setSelectedTemplate("quote")}>
+                  <IoIosQuote />
+                  <p>Quote</p>
+                </li>
+              </ul>
+            </div>
+          </div>}
           {/* COLOR PICKER */}
 
           {/* CONTROLBOX */}
@@ -265,6 +296,10 @@ export default function Home() {
             <li className="select-none relative flex flex-col items-center cursor-pointer hover:bg-gray-50 transition-all py-3 gap-1 px-5 rounded-md hover:text-blue-400 text-gray-500">
               <IoCopy />
               <p>Copy</p>
+            </li>
+            <li className="select-none relative flex flex-col items-center cursor-pointer hover:bg-gray-50 transition-all py-3 gap-1 px-5 rounded-md hover:text-blue-400 text-gray-500" onClick={() => setShowTemplateSelector(prev => !prev)}>
+              <VscExtensions size={20} />
+              <p>Templates</p>
             </li>
           </ul>
           {/* CONTROLBOX */}

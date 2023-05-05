@@ -12,17 +12,17 @@ import linkifyUsernames from '@/utils/formatPostContent.util'
 const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, profileUrl, displayName, username, postContent, likeCount, replyCount, showwcasePostImages, twitterPostImages, showwcaseUserEmoji, verifiedTwitter, datePosted }) => {
 
 
-    const ThreadLink: FC<{ title: string, description: string }> = ({ title, description }) => {
-        return (
-            <div>
-                <Image src="https://pbs.twimg.com/media/FugVWNgWIBM-4mp.jpg" alt="threadlink" width={200} height={200} />
-                <div>
-                    <h2>{title}</h2>
-                    <p>{description}</p>
-                </div>
-            </div>
-        )
-    }
+    // const ThreadLink: FC<{ title: string, description: string }> = ({ title, description }) => {
+    //     return (
+    //         <div>
+    //             <Image src="https://pbs.twimg.com/media/FugVWNgWIBM-4mp.jpg" alt="threadlink" width={200} height={200} />
+    //             <div>
+    //                 <h2>{title}</h2>
+    //                 <p>{description}</p>
+    //             </div>
+    //         </div>
+    //     )
+    // }
 
     return (
         <div>
