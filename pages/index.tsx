@@ -14,6 +14,9 @@ import { COLORS } from "@/constants/colors"
 import { GRADIENTS } from "@/constants/gradients"
 import { DUMMY_TEMP } from "@/constants/dummy_template"
 import QuoteTemplate from "@/components/templates/QuoteTemplate";
+import * as htmlToImage from 'html-to-image';
+import toast from "react-hot-toast";
+
 
 export default function Home() {
   const [showBackgroundPicker, setShowBackgroundPicker] = useState(false)
@@ -135,13 +138,52 @@ export default function Home() {
   const downloadImage = () => {
     const shotElement = document.querySelector('#shot');
     if (!shotElement) return
-    domtoimage.toPng(shotElement, { quality: 1.0 })
-      .then(function (dataUrl: any) {
+    const toastId = toast.loading("Downloading...")
+    htmlToImage.toPng(shotElement as HTMLElement)
+      .then(function (dataUrl) {
         var link = document.createElement('a');
         link.download = "new-shot-" + Date.now() + '.png';
         link.href = dataUrl;
         link.click();
+        toast.success('Downloaded successfully');
+        toast.dismiss(toastId)
       });
+  }
+
+  const copyImage = () => {
+    const shotElement = document.querySelector('#shot');
+    if (!shotElement) return
+
+    const canvasElement = document.createElement('canvas');
+    const context = canvasElement.getContext('2d');
+
+    const toastId = toast.loading("Copying...")
+    htmlToImage.toPng(shotElement as HTMLElement)
+      .then(function (dataUrl) {
+        const imageElement = new Image();
+        imageElement.onload = function () {
+          canvasElement.width = imageElement.width;
+          canvasElement.height = imageElement.height;
+          context?.drawImage(imageElement, 0, 0);
+          canvasElement.toBlob(function (blob) {
+            const item = new ClipboardItem({ "image/png": blob });
+            navigator.clipboard.write([item]).then(function () {
+              toast.success('Saved to clipboard');
+              toast.dismiss(toastId)
+            }, function (err) {
+              toast.error('Error saving to clipboard: ', err);
+              toast.dismiss(toastId)
+            });
+          });
+        };
+        imageElement.src = dataUrl;
+      });
+
+    //   htmlToImage.toPng(shotElement as HTMLElement)
+    //     .then(function (dataUrl) {
+    //       navigator.clipboard.writeText(dataUrl);
+    //       console.log('Saved to clipboard');
+    //     });
   }
 
   const fetchTwitterPost = async (twitterPostID: string) => {
@@ -270,7 +312,7 @@ export default function Home() {
             <div>
 
               <ul className="flex items-center gap-2 bg-white rounded-xl">
-                <li className="select-none relative flex flex-col items-center cursor-pointer hover:bg-gray-50 transition-all py-3 gap-1 px-5 rounded-md hover:text-blue-400 text-gray-500" onClick={()=>setSelectedTemplate("thread")}>
+                <li className="select-none relative flex flex-col items-center cursor-pointer hover:bg-gray-50 transition-all py-3 gap-1 px-5 rounded-md hover:text-blue-400 text-gray-500" onClick={() => setSelectedTemplate("thread")}>
                   <IoEyedropSharp />
                   <p>Thread</p>
                 </li>
@@ -293,7 +335,7 @@ export default function Home() {
               <FiDownload size={20} />
               <p>Download</p>
             </li>
-            <li className="select-none relative flex flex-col items-center cursor-pointer hover:bg-gray-50 transition-all py-3 gap-1 px-5 rounded-md hover:text-blue-400 text-gray-500">
+            <li className="select-none relative flex flex-col items-center cursor-pointer hover:bg-gray-50 transition-all py-3 gap-1 px-5 rounded-md hover:text-blue-400 text-gray-500" onClick={copyImage}>
               <IoCopy />
               <p>Copy</p>
             </li>
