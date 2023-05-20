@@ -15,4 +15,5 @@ export type TthreadProps = {
     datePosted:string
     showwwcaseMentions?:any[]
     showwcaseLink?:any
+    twitterLink?:any
 }

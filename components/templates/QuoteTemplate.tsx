@@ -9,22 +9,11 @@ import { FaRegComment } from 'react-icons/fa'
 import Loader from '../loader'
 import Image from 'next/image'
 import Link from 'next/link'
+import ThreadLink from '../ThreadLink'
+import convertLinksToHTML from '@/utils/convertsLinksToHTML.util'
 
 const QuoteTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, profileUrl, displayName, username, postContent, likeCount, replyCount, showwcasePostImages, twitterPostImages, showwcaseUserEmoji, verifiedTwitter, datePosted, showwcaseLink }) => {
 
-  const ThreadLink: FC<{ title: string, description: string, url: string, images: string[] }> = ({ title, description, url, images }) => {
-    return (
-      <div className='border rounded-md p-2'>
-        <Link href={url ? url : ""} className=' text-gray-500'>
-          {images && <img src={images[0]} className='w-full' alt="threadlink" width={500} height={200} />}
-          <div>
-            <h2 className='text-black'>{title}</h2>
-            <p>{description}</p>
-          </div>
-        </Link>
-      </div>
-    )
-  }
   return (
     <div>
       <>
@@ -42,9 +31,9 @@ const QuoteTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, pr
                     <small className="text-gray-500">@{username}</small>
                   </div>
                 </div>
-                <Image src={`/assets/${platformLogo}`} alt={platform} width={50} height={50} className={` absolute  rounded-full  object-cover ${platform === TABS[0] ? "bg-white w-[50px] h-[50px] -bottom-6 -right-6" :"w-[70px] h-[70px] -bottom-8 -right-8"} `} />
+                <Image src={`/assets/${platformLogo}`} alt={platform} width={50} height={50} className={` absolute  rounded-full  object-cover ${platform === TABS[0] ? "bg-white w-[50px] h-[50px] -bottom-6 -right-6" : "w-[70px] h-[70px] -bottom-8 -right-8"} `} />
               </div>
-              <p className="my-3 text-center" dangerouslySetInnerHTML={{ __html: linkifyUsernames(postContent) }} />
+              <p className="my-3 text-center" dangerouslySetInnerHTML={{ __html: linkifyUsernames(convertLinksToHTML(postContent)) }} />
               <div className={`grid ${(showwcasePostImages?.length === 1 || twitterPostImages?.length === 1) ? " " : "grid-cols-2"} gap-1`} id={(showwcasePostImages?.length === 3 || twitterPostImages?.length === 3) ? "three-images" : ""} >
                 {
                   platform === TABS[0] ?

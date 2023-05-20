@@ -9,36 +9,13 @@ import { TABS } from '@/constants/tabs'
 import formatDate from '@/utils/formatDate.util'
 import linkifyUsernames from '@/utils/formatPostContent.util'
 import Link from 'next/link'
+import ThreadLink from '../ThreadLink'
+import convertLinksToHTML from '@/utils/convertsLinksToHTML.util'
+import addHashtagLinks from '@/utils/addhashTagLinks.util'
 
-const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, profileUrl, displayName, username, postContent, likeCount, replyCount, showwcasePostImages, twitterPostImages, showwcaseUserEmoji, verifiedTwitter, datePosted, showwcaseLink }) => {
-
-
-    const ThreadLink: FC<{ title: string, description: string, url: string, images: string[] }> = ({ title, description, url, images }) => {
-        return (
-            <div className='border rounded-md p-2'>
-                <Link href={url ? url : ""} className=' text-gray-500'>
-                    {images && <img src={images[0]} className='w-full' alt="threadlink" width={500} height={200} />}
-                    <div>
-                        <h2 className='text-black'>{title}</h2>
-                        <p>{description}</p>
-                    </div>
-                </Link>
-            </div>
-        )
-    }
+const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, profileUrl, displayName, username, postContent, likeCount, replyCount, showwcasePostImages, twitterPostImages, showwcaseUserEmoji, verifiedTwitter, datePosted, showwcaseLink, twitterLink }) => {
 
 
-    function convertLinksToHTML(text: any) {
-        const linkRegex = /(https?:\/\/\S+)|(www\.\S+)/gi;
-        const replacedText = text.replace(linkRegex, (match: any) => {
-            let href = match;
-            if (match.startsWith("www")) {
-                href = `http://${match}`;
-            }
-            return `<a href="${href}" target="_blank">${match}</a><br/>`;
-        });
-        return replacedText;
-    }
     return (
         <div>
             <>
@@ -58,7 +35,7 @@ const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, p
                                 </div>
                                 <Image src={`/assets/${platformLogo}`} alt={platform} width={50} height={50} className="w-[45px] rounded-full h-[45px] object-cover" />
                             </div>
-                            <p className="my-3" dangerouslySetInnerHTML={{ __html: linkifyUsernames(convertLinksToHTML(postContent)) }} />
+                            <p className="my-3" dangerouslySetInnerHTML={{ __html: linkifyUsernames(convertLinksToHTML(addHashtagLinks(postContent))) }} />
                             <div className={`grid ${(showwcasePostImages?.length === 1 || twitterPostImages?.length === 1) ? " " : "grid-cols-2"} gap-1`} id={(showwcasePostImages?.length === 3 || twitterPostImages?.length === 3) ? "three-images" : ""} >
                                 {
                                     platform === TABS[0] ?
@@ -79,9 +56,10 @@ const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, p
                                         (showwcaseLink && showwcaseLink.type !== "thread") && <ThreadLink title={showwcaseLink.title} description={showwcaseLink.description} url={showwcaseLink.url} images={showwcaseLink.images} />
                                     )
                                 )
-                                    : (
-                                        <></>
-                                    )
+                                    : <></>
+                                    // (postContent.length < 350 && (twitterPostImages && twitterPostImages?.length < 1)) && (
+                                    //     (twitterLink) && <ThreadLink title={twitterLink.title} description={twitterLink?.description || twitterLink.expanded_url} url={twitterLink.url} images={twitterLink.images || [""]} />
+                                    // )
                             }
                             <div className='flex justify-between items-center mt-3'>
                                 <ul className='flex gap-3 '>
