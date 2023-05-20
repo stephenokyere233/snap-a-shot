@@ -8,8 +8,23 @@ import { AiTwotoneHeart } from 'react-icons/ai'
 import { FaRegComment } from 'react-icons/fa'
 import Loader from '../loader'
 import Image from 'next/image'
+import Link from 'next/link'
 
-const QuoteTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, profileUrl, displayName, username, postContent, likeCount, replyCount, showwcasePostImages, twitterPostImages, showwcaseUserEmoji, verifiedTwitter, datePosted }) => {
+const QuoteTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, profileUrl, displayName, username, postContent, likeCount, replyCount, showwcasePostImages, twitterPostImages, showwcaseUserEmoji, verifiedTwitter, datePosted, showwcaseLink }) => {
+
+  const ThreadLink: FC<{ title: string, description: string, url: string, images: string[] }> = ({ title, description, url, images }) => {
+    return (
+      <div className='border rounded-md p-2'>
+        <Link href={url ? url : ""} className=' text-gray-500'>
+          {images && <img src={images[0]} className='w-full' alt="threadlink" width={500} height={200} />}
+          <div>
+            <h2 className='text-black'>{title}</h2>
+            <p>{description}</p>
+          </div>
+        </Link>
+      </div>
+    )
+  }
   return (
     <div>
       <>
@@ -29,7 +44,7 @@ const QuoteTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, pr
                 </div>
                 <Image src={`/assets/${platformLogo}`} alt={platform} width={50} height={50} className={` absolute  rounded-full  object-cover ${platform === TABS[0] ? "bg-white w-[50px] h-[50px] -bottom-6 -right-6" :"w-[70px] h-[70px] -bottom-8 -right-8"} `} />
               </div>
-              <p className="my-3" dangerouslySetInnerHTML={{ __html: linkifyUsernames(postContent) }} />
+              <p className="my-3 text-center" dangerouslySetInnerHTML={{ __html: linkifyUsernames(postContent) }} />
               <div className={`grid ${(showwcasePostImages?.length === 1 || twitterPostImages?.length === 1) ? " " : "grid-cols-2"} gap-1`} id={(showwcasePostImages?.length === 3 || twitterPostImages?.length === 3) ? "three-images" : ""} >
                 {
                   platform === TABS[0] ?
@@ -44,27 +59,16 @@ const QuoteTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, pr
                     }))
                 }
                 {
-                  platform === TABS[0] ? <></> : (
-                    <></>
+                  platform === TABS[0] ? (
+                    (postContent.length < 350 && (showwcasePostImages && showwcasePostImages?.length < 1)) && (
+                      (showwcaseLink && showwcaseLink.type !== "thread") && <ThreadLink title={showwcaseLink.title} description={showwcaseLink.description} url={showwcaseLink.url} images={showwcaseLink.images} />
+                    )
                   )
+                    : (
+                      <></>
+                    )
                 }
               </div>
-              {/* <div className='flex justify-between items-center mt-3'>
-                <ul className='flex gap-3 '>
-                  <li className="flex items-center gap-1">
-                    <AiTwotoneHeart className="text-red-400" size={17} />
-                    <p className="text-gray-600 text-sm">{likeCount}</p>
-                  </li>
-                  <li className="flex items-center gap-1">
-                    <FaRegComment size={17} />
-                    <p className="text-gray-600 text-sm">{replyCount}</p>
-                  </li>
-                </ul>
-                <small className=''>
-                  {formatDate(datePosted)}
-                </small>
-              </div> */}
-
             </>)
           }
 

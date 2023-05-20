@@ -37,10 +37,17 @@ export default function Home() {
   const [errorMessage, setErrorMessage] = useState<string | null>("")
   const { isShowwcaseDataFetched, setIsShowwcaseDataFetched, isTwitterDataFetched, setIsTwitterDataFetched
   } = useContext<IAppContext | null>(AppContext) as IAppContext
+  const [showwcaseFetchFailed, setShowwcaseFetchFailed] = useState<boolean>(false)
+  const [twitterFetchFailed, setTwitterFetchFailed] = useState<boolean>(false)
 
 
   const LinksToCheck = [
     "https://www.showwcase.com/thread/", "https://twitter.com/"
+  ]
+
+  const availableTemplates = [
+    "thread",
+    "quote"
   ]
 
   const checkValidity = async (link: string | null) => {
@@ -200,14 +207,27 @@ export default function Home() {
     try {
       const response = await axios.get(`/api/fetchTweet?twitterPostID=${twitterPostID}`);
       console.log(response.data);
-      setIsTwitterDataFetched(true)
-      console.log(response.data)
-      setTweetInfo(response.data)
-      setLoading(false)
+      if (response.data.errors) {
+        console.log("failed to fetch tweet")
+        setTwitterFetchFailed(true)
+        setIsTwitterDataFetched(false)
+        setLoading(false)
+        return
+      }
+      if (response.data.data || response.data.includes) {
+        setIsTwitterDataFetched(true)
+        console.log(response.data)
+        setTweetInfo(response.data)
+        setTwitterFetchFailed(false)
+        setLoading(false)
+
+      }
     } catch (error) {
       setLoading(false)
       console.error(error);
-      setLoading(false)
+      console.log("failed to fetch tweet")
+      setTwitterFetchFailed(true)
+      throw new Error("no data")
     }
   }
 
@@ -242,9 +262,9 @@ export default function Home() {
     }).catch(function (error) {
       console.error(error);
       setLoading(false)
+      setShowwcaseFetchFailed(true)
     })
   }
-
 
 
 
@@ -273,28 +293,33 @@ export default function Home() {
           <section style={{ background: background }} id="shot" className="transition-all w-full h-full p-20 flex justify-center items-center bg-cover object-cover bg-no-repeat">
             {
               // IF SELECTED TAB IS SHOWCASE
-              selectedTemplate === "thread" ?
-                (platform === TABS[0] ?
-                  (!isShowwcaseDataFetched ? <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} /> :
-                    <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={user?.profilePictureUrl
+              platform === TABS[0] ?
+                (selectedTemplate === availableTemplates[0] ?
+                  (showwcaseFetchFailed ? <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={`Failed to fetch ${platform}`} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} /> :
+                    (isShowwcaseDataFetched ?
+                      <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={user?.profilePictureUrl
+                      } displayName={threadInfo.user.displayName} username={threadInfo.user.username} postContent={threadInfo.message} likeCount={threadInfo.totalUpvotes} replyCount={threadInfo.totalReplies} platform={TABS[0]} showwcasePostImages={threadInfo.images} showwcaseUserEmoji={threadInfo.user.activity.emoji} datePosted={threadInfo.createdAt} showwcaseLink={threadInfo.linkPreviewMeta} /> :
+                      <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} />
+                    )) :
+                  (showwcaseFetchFailed ? <QuoteTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={`Failed to fetch ${platform}`} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} /> :
+                    (isShowwcaseDataFetched ? <QuoteTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={user?.profilePictureUrl
                     } displayName={threadInfo.user.displayName} username={threadInfo.user.username} postContent={threadInfo.message} likeCount={threadInfo.totalUpvotes} replyCount={threadInfo.totalReplies} platform={TABS[0]} showwcasePostImages={threadInfo.images} showwcaseUserEmoji={threadInfo.user.activity.emoji} datePosted={threadInfo.createdAt
-                    } />) :
-                  // IF SELECTED TAB IS TWITTER
-                  (!isTwitterDataFetched ?
-                    <ThreadTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[1]} datePosted={new Date().toString()} /> : <ThreadTemplate platformLogo="twitter.svg" platform={TABS[1]} isLoading={loading} profileUrl={tweetInfo.includes.users[0].profile_image_url} displayName={tweetInfo.includes.users[0].name}
-                      username={tweetInfo?.includes.users[0]?.username} postContent={tweetInfo.data.text} likeCount={tweetInfo.data.public_metrics.like_count} replyCount={tweetInfo.data.public_metrics?.reply_count}
-                      twitterPostImages={tweetInfo.includes.media} verifiedTwitter={tweetInfo.includes.users[0].verified} datePosted={tweetInfo.data.created_at}
-                    />)) : (platform === TABS[0] ?
-                      (!isShowwcaseDataFetched ? <QuoteTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} /> :
-                        <QuoteTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={user?.profilePictureUrl
-                        } displayName={threadInfo.user.displayName} username={threadInfo.user.username} postContent={threadInfo.message} likeCount={threadInfo.totalUpvotes} replyCount={threadInfo.totalReplies} platform={TABS[0]} showwcasePostImages={threadInfo.images} showwcaseUserEmoji={threadInfo.user.activity.emoji} datePosted={threadInfo.createdAt
-                        } />) :
-                      // IF SELECTED TAB IS TWITTER
-                      (!isTwitterDataFetched ?
-                        <QuoteTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[1]} datePosted={new Date().toString()} /> : <QuoteTemplate platformLogo="twitter.svg" platform={TABS[1]} isLoading={loading} profileUrl={tweetInfo.includes.users[0].profile_image_url} displayName={tweetInfo.includes.users[0].name}
-                          username={tweetInfo.includes.users[0].username} postContent={tweetInfo.data.text} likeCount={tweetInfo.data.public_metrics.like_count} replyCount={tweetInfo.data.public_metrics?.reply_count}
-                          twitterPostImages={tweetInfo.includes.media} verifiedTwitter={tweetInfo.includes.users[0].verified} datePosted={tweetInfo.data.created_at}
-                        />))
+                    } showwcaseLink={threadInfo.linkPreviewMeta} /> :
+                      <QuoteTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} />
+                    ))) :
+                (selectedTemplate === availableTemplates[0] ?
+                  (twitterFetchFailed ? <ThreadTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={`Failed to fetch ${platform}`} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} /> :
+                    (isTwitterDataFetched ?
+                      <ThreadTemplate platformLogo="twitter.svg" platform={TABS[1]} isLoading={loading} profileUrl={tweetInfo.includes.users[0].profile_image_url} displayName={tweetInfo.includes.users[0].name}
+                        username={tweetInfo.includes.users[0].username} postContent={tweetInfo.data.text} likeCount={tweetInfo.data.public_metrics.like_count} replyCount={tweetInfo.data.public_metrics.reply_count} twitterPostImages={tweetInfo.includes.media} verifiedTwitter={tweetInfo.includes.users[0].verified} datePosted={tweetInfo.data.created_at} /> :
+                      <ThreadTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} />
+                    )) :
+                  (twitterFetchFailed ? <QuoteTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={`Failed to fetch ${platform}`} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} /> :
+                    (isTwitterDataFetched ? <QuoteTemplate platformLogo="twitter.svg" platform={TABS[1]} isLoading={loading} profileUrl={tweetInfo.includes.users[0].profile_image_url} displayName={tweetInfo.includes.users[0].name}
+                      username={tweetInfo.includes.users[0].username} postContent={tweetInfo.data.text} likeCount={tweetInfo.data.public_metrics.like_count} replyCount={tweetInfo.data.public_metrics.reply_count} twitterPostImages={tweetInfo.includes.media} verifiedTwitter={tweetInfo.includes.users[0].verified} datePosted={tweetInfo.data.created_at} /> :
+                      <QuoteTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} />
+                    )))
+
             }
           </section>
         </Resizer>
@@ -321,11 +346,11 @@ export default function Home() {
             <div>
 
               <ul className="flex items-center gap-2 bg-white rounded-xl">
-                <li className="select-none relative flex flex-col items-center cursor-pointer hover:bg-gray-50 transition-all py-3 gap-1 px-5 rounded-md hover:text-blue-400 text-gray-500" onClick={() => setSelectedTemplate("thread")}>
+                <li className="select-none relative flex flex-col items-center cursor-pointer hover:bg-gray-50 transition-all py-3 gap-1 px-5 rounded-md hover:text-blue-400 text-gray-500" onClick={() => setSelectedTemplate(availableTemplates[0])}>
                   <IoEyedropSharp />
                   <p>Thread</p>
                 </li>
-                <li className="select-none relative flex flex-col items-center cursor-pointer hover:bg-gray-50 transition-all py-3 gap-1 px-5 rounded-md hover:text-blue-400 text-gray-500" onClick={() => setSelectedTemplate("quote")}>
+                <li className="select-none relative flex flex-col items-center cursor-pointer hover:bg-gray-50 transition-all py-3 gap-1 px-5 rounded-md hover:text-blue-400 text-gray-500" onClick={() => setSelectedTemplate(availableTemplates[1])}>
                   <IoIosQuote />
                   <p>Quote</p>
                 </li>

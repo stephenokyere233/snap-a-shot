@@ -14,4 +14,5 @@ export type TthreadProps = {
     verifiedTwitter?:boolean
     datePosted:string
     showwwcaseMentions?:any[]
+    showwcaseLink?:any
 }
