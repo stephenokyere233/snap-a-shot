@@ -17,7 +17,7 @@ import { IAppContext } from '@/interfaces'
 
 const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, profileUrl, displayName, username, postContent, likeCount, replyCount, showwcasePostImages, twitterPostImages, showwcaseUserEmoji, verifiedTwitter, datePosted, showwcaseLink, twitterLink }) => {
 
-    const { showStats, setShowStats } = useContext<IAppContext | null>(AppContext) as IAppContext
+    const { showStats } = useContext<IAppContext | null>(AppContext) as IAppContext
 
     return (
         <div>
@@ -64,9 +64,9 @@ const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, p
                                 //     (twitterLink) && <ThreadLink title={twitterLink.title} description={twitterLink?.description || twitterLink.expanded_url} url={twitterLink.url} images={twitterLink.images || [""]} />
                                 // )
                             }
-                            {
-                                showStats && (
-                                    <div className='flex justify-between items-center mt-3'>
+                            <div className='flex justify-between items-center mt-3'>
+                                {
+                                    showStats && (
                                         <ul className='flex gap-3 '>
                                             <li className="flex items-center gap-1">
                                                 <AiTwotoneHeart className="text-red-400" size={17} />
@@ -77,12 +77,12 @@ const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, p
                                                 <p className="text-gray-600 text-sm">{replyCount}</p>
                                             </li>
                                         </ul>
-                                        <small className=''>
-                                            {formatDate(datePosted)}
-                                        </small>
-                                    </div>
-                                )
-                            }
+                                    )
+                                }
+                                <small className={`${!showStats && " w-full flex justify-end"}`}>
+                                    {formatDate(datePosted)}
+                                </small>
+                            </div>
 
                         </>)
                     }

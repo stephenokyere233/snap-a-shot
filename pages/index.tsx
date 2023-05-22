@@ -1,13 +1,12 @@
 import { FormEvent, useContext, useEffect, useState } from "react";
 import axios from "axios";
-import domtoimage from 'dom-to-image';
 import Resizer from "@/components/Resizer";
 import ThreadTemplate from "@/components/templates/ThreadTemplate";
 import { AppContext } from "@/context";
 import { IAppContext } from "@/interfaces";
 import { FiDownload, FiSun } from "react-icons/fi";
 import { IoCopy, IoEyedropSharp } from "react-icons/io5";
-import { IoIosQuote } from "react-icons/io"
+import { IoIosQuote, IoMdStats } from "react-icons/io"
 import { VscExtensions } from "react-icons/vsc"
 import { TABS } from "@/constants/tabs"
 import { COLORS } from "@/constants/colors"
@@ -17,6 +16,7 @@ import QuoteTemplate from "@/components/templates/QuoteTemplate";
 import * as htmlToImage from 'html-to-image';
 import toast from "react-hot-toast";
 import removeLastURL from "@/utils/removeLastURL.util";
+
 
 
 export default function Home() {
@@ -35,8 +35,7 @@ export default function Home() {
   const [isValidTwitterLink, setIsValidTwitterLink] = useState<boolean>(false)
   const [error, setError] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string | null>("")
-  const { isShowwcaseDataFetched, setIsShowwcaseDataFetched, isTwitterDataFetched, setIsTwitterDataFetched,setShowStats,showStats
-  } = useContext<IAppContext | null>(AppContext) as IAppContext
+  const { isShowwcaseDataFetched, setIsShowwcaseDataFetched, isTwitterDataFetched, setIsTwitterDataFetched, setShowStats } = useContext<IAppContext | null>(AppContext) as IAppContext
   const [showwcaseFetchFailed, setShowwcaseFetchFailed] = useState<boolean>(false)
   const [twitterFetchFailed, setTwitterFetchFailed] = useState<boolean>(false)
 
@@ -375,7 +374,7 @@ export default function Home() {
               <p>Templates</p>
             </li>
             <li className="select-none relative flex flex-col items-center cursor-pointer hover:bg-gray-50 transition-all py-3 gap-1 px-5 rounded-md hover:text-blue-400 text-gray-500" onClick={() => setShowStats(prev => !prev)}>
-              <VscExtensions size={20} />
+              <IoMdStats size={20} />
               <p>Show Stats</p>
             </li>
           </ul>
