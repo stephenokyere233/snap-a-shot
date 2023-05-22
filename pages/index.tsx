@@ -48,18 +48,30 @@ export default function Home() {
     "thread",
     "quote"
   ]
+  const removeQuery = (link: string) => {
+
+    if (link.includes("?")) {
+      const newLink = link.split("?")
+      link = newLink[0]
+
+    }
+    return link
+
+  }
 
   const checkValidity = async (link: string | null) => {
     if (!link) return
-    if (link.includes(LinksToCheck[0])) {
-      const showwcaseLinkArray = link.split(LinksToCheck[0])
+    const newLink = removeQuery(link);
+    if (newLink.includes(LinksToCheck[0])) {
+      const showwcaseLinkArray = newLink.split(LinksToCheck[0])
       setIsValidShowwcaseLink(true)
       setIsValidTwitterLink(false)
       const showwcaseThreadID = showwcaseLinkArray[1]
       setThreadID(showwcaseThreadID)
       console.log("valid showwcase link")
-    } else if (link.includes(LinksToCheck[1]) && link.includes("/status/")) {
-      const linkArray = link.split("/status/")
+    } else if (newLink.includes(LinksToCheck[1]) && newLink.includes("/status/")) {
+      const linkArray = newLink.split("/status/")
+      console.log(newLink)
       setIsValidTwitterLink(true)
       setIsValidShowwcaseLink(false)
       const newTwitterPostID = linkArray[1]
@@ -89,7 +101,7 @@ export default function Home() {
 
   const handleChange = (event: any) => {
     checkValidity(event.target.value)
-    setLink(event.target.value)
+    setLink(removeQuery(event.target.value))
     setError(false)
     setErrorMessage(null)
 
