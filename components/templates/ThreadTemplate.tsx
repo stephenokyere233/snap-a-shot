@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { FC } from 'react'
+import { FC, useContext } from 'react'
 import { FaRegComment } from 'react-icons/fa'
 import Loader from '../loader'
 import Image from 'next/image'
@@ -12,9 +12,12 @@ import Link from 'next/link'
 import ThreadLink from '../ThreadLink'
 import convertLinksToHTML from '@/utils/convertsLinksToHTML.util'
 import addHashtagLinks from '@/utils/addhashTagLinks.util'
+import { AppContext } from '@/context'
+import { IAppContext } from '@/interfaces'
 
 const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, profileUrl, displayName, username, postContent, likeCount, replyCount, showwcasePostImages, twitterPostImages, showwcaseUserEmoji, verifiedTwitter, datePosted, showwcaseLink, twitterLink }) => {
 
+    const { showStats, setShowStats } = useContext<IAppContext | null>(AppContext) as IAppContext
 
     return (
         <div>
@@ -57,25 +60,29 @@ const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, p
                                     )
                                 )
                                     : <></>
-                                    // (postContent.length < 350 && (twitterPostImages && twitterPostImages?.length < 1)) && (
-                                    //     (twitterLink) && <ThreadLink title={twitterLink.title} description={twitterLink?.description || twitterLink.expanded_url} url={twitterLink.url} images={twitterLink.images || [""]} />
-                                    // )
+                                // (postContent.length < 350 && (twitterPostImages && twitterPostImages?.length < 1)) && (
+                                //     (twitterLink) && <ThreadLink title={twitterLink.title} description={twitterLink?.description || twitterLink.expanded_url} url={twitterLink.url} images={twitterLink.images || [""]} />
+                                // )
                             }
-                            <div className='flex justify-between items-center mt-3'>
-                                <ul className='flex gap-3 '>
-                                    <li className="flex items-center gap-1">
-                                        <AiTwotoneHeart className="text-red-400" size={17} />
-                                        <p className="text-gray-600 text-sm">{likeCount}</p>
-                                    </li>
-                                    <li className="flex items-center gap-1">
-                                        <FaRegComment size={17} />
-                                        <p className="text-gray-600 text-sm">{replyCount}</p>
-                                    </li>
-                                </ul>
-                                <small className=''>
-                                    {formatDate(datePosted)}
-                                </small>
-                            </div>
+                            {
+                                showStats && (
+                                    <div className='flex justify-between items-center mt-3'>
+                                        <ul className='flex gap-3 '>
+                                            <li className="flex items-center gap-1">
+                                                <AiTwotoneHeart className="text-red-400" size={17} />
+                                                <p className="text-gray-600 text-sm">{likeCount}</p>
+                                            </li>
+                                            <li className="flex items-center gap-1">
+                                                <FaRegComment size={17} />
+                                                <p className="text-gray-600 text-sm">{replyCount}</p>
+                                            </li>
+                                        </ul>
+                                        <small className=''>
+                                            {formatDate(datePosted)}
+                                        </small>
+                                    </div>
+                                )
+                            }
 
                         </>)
                     }

@@ -16,6 +16,7 @@ import { DUMMY_TEMP } from "@/constants/dummy_template"
 import QuoteTemplate from "@/components/templates/QuoteTemplate";
 import * as htmlToImage from 'html-to-image';
 import toast from "react-hot-toast";
+import removeLastURL from "@/utils/removeLastURL.util";
 
 
 export default function Home() {
@@ -26,7 +27,6 @@ export default function Home() {
   const [platform, setPlatform] = useState(TABS[0])
   const [link, setLink] = useState('')
   const [user, setUser] = useState<any>(null)
-  const [thread, setThread] = useState<any>(null)
   const [tweetInfo, setTweetInfo] = useState<any>(null)
   const [threadInfo, setThreadInfo] = useState<any>(null)
   const [loading, setLoading] = useState<boolean>(false)
@@ -35,7 +35,7 @@ export default function Home() {
   const [isValidTwitterLink, setIsValidTwitterLink] = useState<boolean>(false)
   const [error, setError] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string | null>("")
-  const { isShowwcaseDataFetched, setIsShowwcaseDataFetched, isTwitterDataFetched, setIsTwitterDataFetched
+  const { isShowwcaseDataFetched, setIsShowwcaseDataFetched, isTwitterDataFetched, setIsTwitterDataFetched,setShowStats,showStats
   } = useContext<IAppContext | null>(AppContext) as IAppContext
   const [showwcaseFetchFailed, setShowwcaseFetchFailed] = useState<boolean>(false)
   const [twitterFetchFailed, setTwitterFetchFailed] = useState<boolean>(false)
@@ -266,9 +266,6 @@ export default function Home() {
     })
   }
 
-
-
-
   return (
     <main className="min-h-screen bg-gray-50 p-10">
       <div>
@@ -311,12 +308,12 @@ export default function Home() {
                   (twitterFetchFailed ? <ThreadTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={`Failed to fetch ${platform}`} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} /> :
                     (isTwitterDataFetched ?
                       <ThreadTemplate platformLogo="twitter.svg" platform={TABS[1]} isLoading={loading} profileUrl={tweetInfo.includes.users[0].profile_image_url} displayName={tweetInfo.includes.users[0].name}
-                        username={tweetInfo.includes.users[0].username} postContent={tweetInfo.data.text} likeCount={tweetInfo.data.public_metrics.like_count} replyCount={tweetInfo.data.public_metrics.reply_count} twitterPostImages={tweetInfo.includes.media} verifiedTwitter={tweetInfo.includes.users[0].verified} datePosted={tweetInfo.data.created_at} twitterLink={tweetInfo.data.entities.urls ? tweetInfo.data.entities.urls[0]:""} /> :
+                        username={tweetInfo.includes.users[0].username} postContent={removeLastURL(tweetInfo.data.text)} likeCount={tweetInfo.data.public_metrics.like_count} replyCount={tweetInfo.data.public_metrics.reply_count} twitterPostImages={tweetInfo.includes.media} verifiedTwitter={tweetInfo.includes.users[0].verified} datePosted={tweetInfo.data.created_at} twitterLink={tweetInfo.data.entities.urls ? tweetInfo.data.entities.urls[0] : ""} /> :
                       <ThreadTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} />
                     )) :
                   (twitterFetchFailed ? <QuoteTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={`Failed to fetch ${platform}`} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} /> :
                     (isTwitterDataFetched ? <QuoteTemplate platformLogo="twitter.svg" platform={TABS[1]} isLoading={loading} profileUrl={tweetInfo.includes.users[0].profile_image_url} displayName={tweetInfo.includes.users[0].name}
-                      username={tweetInfo.includes.users[0].username} postContent={tweetInfo.data.text} likeCount={tweetInfo.data.public_metrics.like_count} replyCount={tweetInfo.data.public_metrics.reply_count} twitterPostImages={tweetInfo.includes.media} verifiedTwitter={tweetInfo.includes.users[0].verified} datePosted={tweetInfo.data.created_at} /> :
+                      username={tweetInfo.includes.users[0].username} postContent={removeLastURL(tweetInfo.data.text)} likeCount={tweetInfo.data.public_metrics.like_count} replyCount={tweetInfo.data.public_metrics.reply_count} twitterPostImages={tweetInfo.includes.media} verifiedTwitter={tweetInfo.includes.users[0].verified} datePosted={tweetInfo.data.created_at} /> :
                       <QuoteTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} />
                     )))
 
@@ -376,6 +373,10 @@ export default function Home() {
             <li className="select-none relative flex flex-col items-center cursor-pointer hover:bg-gray-50 transition-all py-3 gap-1 px-5 rounded-md hover:text-blue-400 text-gray-500" onClick={() => setShowTemplateSelector(prev => !prev)}>
               <VscExtensions size={20} />
               <p>Templates</p>
+            </li>
+            <li className="select-none relative flex flex-col items-center cursor-pointer hover:bg-gray-50 transition-all py-3 gap-1 px-5 rounded-md hover:text-blue-400 text-gray-500" onClick={() => setShowStats(prev => !prev)}>
+              <VscExtensions size={20} />
+              <p>Show Stats</p>
             </li>
           </ul>
           {/* CONTROLBOX */}

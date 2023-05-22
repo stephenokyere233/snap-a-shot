@@ -1,14 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 import { TABS } from '@/constants/tabs'
 import { TthreadProps } from '@/types'
-import formatDate from '@/utils/formatDate.util'
 import linkifyUsernames from '@/utils/formatPostContent.util'
 import React, { FC } from 'react'
-import { AiTwotoneHeart } from 'react-icons/ai'
-import { FaRegComment } from 'react-icons/fa'
 import Loader from '../loader'
 import Image from 'next/image'
-import Link from 'next/link'
 import ThreadLink from '../ThreadLink'
 import convertLinksToHTML from '@/utils/convertsLinksToHTML.util'
 
