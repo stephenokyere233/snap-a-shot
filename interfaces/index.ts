@@ -7,6 +7,8 @@ export interface IAppContext {
     setIsTwitterDataFetched: React.Dispatch<React.SetStateAction<boolean>>
     selectedBGColor: string
     setSelectedBGColor: React.Dispatch<React.SetStateAction<string>>
+    showStats: boolean
+    setShowStats: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export interface IAppProvider {
