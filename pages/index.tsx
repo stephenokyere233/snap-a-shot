@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { FormEvent, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Resizer from "@/components/Resizer";
@@ -16,6 +17,7 @@ import QuoteTemplate from "@/components/templates/QuoteTemplate";
 import * as htmlToImage from 'html-to-image';
 import toast from "react-hot-toast";
 import removeLastURL from "@/utils/removeLastURL.util";
+import useDebounce from "@/hooks/useDebounce";
 
 
 
@@ -39,6 +41,8 @@ export default function Home() {
   const [showwcaseFetchFailed, setShowwcaseFetchFailed] = useState<boolean>(false)
   const [twitterFetchFailed, setTwitterFetchFailed] = useState<boolean>(false)
 
+  const debouncedLink = useDebounce(link, 500)
+
 
   const LinksToCheck = [
     "https://www.showwcase.com/thread/", "https://twitter.com/"
@@ -49,15 +53,21 @@ export default function Home() {
     "quote"
   ]
   const removeQuery = (link: string) => {
-
     if (link.includes("?")) {
       const newLink = link.split("?")
       link = newLink[0]
-
     }
     return link
-
   }
+
+  useEffect(
+    () => {
+      if (debouncedLink) {
+        handleSubmit()
+      }
+    },
+    [debouncedLink] // Only call effect if debounced search term changes
+  );
 
   const checkValidity = async (link: string | null) => {
     if (!link) return
@@ -106,8 +116,7 @@ export default function Home() {
     setErrorMessage(null)
 
   }
-  const handleSubmit = (event: FormEvent) => {
-    event.preventDefault()
+  const handleSubmit = () => {
     console.log(platform)
     if (!link) {
       setError(true)
@@ -238,7 +247,6 @@ export default function Home() {
       console.error(error);
       console.log("failed to fetch tweet")
       setTwitterFetchFailed(true)
-      throw new Error("no data")
     }
   }
 
@@ -287,13 +295,13 @@ export default function Home() {
           </ul>
           <FiSun />
         </header>
-        <form className="my-5 flex flex-col gap-3 items-center justify-center" onSubmit={handleSubmit}>
+        <div className="my-5 flex flex-col gap-3 items-center justify-center" >
           <input value={link} onChange={handleChange} placeholder={`Paste ${platform} link here...`} className="text-gray-500 w-full p-2 px-3 border rounded-xl outline-blue-300 shadow-md max-w-xl" />
           {
             error &&
             <p className="text-red-500 text-center capitalize">{errorMessage}</p>
           }
-        </form>
+        </div>
       </div>
 
       <div className="flex items-center justify-center pb-44">
