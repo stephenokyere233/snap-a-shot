@@ -1,3 +1,21 @@
+export const COLORS = [
+    "blue",
+    "yellow",
+    "black",
+    "#FF69B4",
+    "#FFA07A",
+    "#FF6347",
+    "#FF7F50",
+    "#FFD700",
+    "#FF8C00",
+    "#FFA500",
+    "#00FF7F",
+    "#00FA9A",
+    "#00FF00",
+    "#7CFC00",
+    "#40E0D0",
+    "#8F00FF",
+]
 
 export const GRADIENTS = [
     "linear-gradient(to right, #ff512f, #dd2476)",
@@ -15,4 +33,9 @@ export const GRADIENTS = [
     "linear-gradient(to right, #da22ff, #9733ee)",
     "linear-gradient(to right, #4776e6, #8e54e9)",
     "linear-gradient(to right, #f12711, #f5af19)"
+]
+
+export const IMAGES = [
+    "https://img.freepik.com/free-vector/emoticons-with-empty-space-background_79603-1023.jpg?w=996&t=st=1682173578~exp=1682174178~hmac=84d337892d4320bf3dec429b2e6aebbb6f9f4c8845f06fdf439f022ca3949b15"
+
 ]

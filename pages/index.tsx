@@ -6,19 +6,18 @@ import ThreadTemplate from "@/components/templates/ThreadTemplate";
 import { AppContext } from "@/context";
 import { IAppContext } from "@/interfaces";
 import { FiDownload, FiSun } from "react-icons/fi";
-import { IoCopy, IoEyedropSharp } from "react-icons/io5";
+import { IoCopy, IoEyedropSharp, IoColorPalette } from "react-icons/io5";
 import { IoIosQuote, IoMdStats } from "react-icons/io"
 import { VscExtensions } from "react-icons/vsc"
 import { TABS } from "@/constants/tabs"
-import { COLORS } from "@/constants/colors"
-import { GRADIENTS } from "@/constants/gradients"
+import { GRADIENTS, IMAGES, COLORS } from "@/constants/backgrounds"
 import { DUMMY_TEMP } from "@/constants/dummy_template"
 import QuoteTemplate from "@/components/templates/QuoteTemplate";
 import removeLastURL from "@/utils/removeLastURL.util";
 import useDebounce from "@/hooks/useDebounce";
 import removeQuery from "@/utils/removeQuery.util";
 import Header from "@/components/Header";
-import {STYLES} from "@/constants/styles"
+import { STYLES } from "@/constants/styles"
 import copyImage from "@/utils/copyImage.util";
 import downloadImage from "@/utils/downloadImage.util";
 
@@ -39,7 +38,7 @@ export default function Home() {
   const [isValidTwitterLink, setIsValidTwitterLink] = useState<boolean>(false)
   const [error, setError] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string | null>("")
-  const { isShowwcaseDataFetched, setIsShowwcaseDataFetched, isTwitterDataFetched, setIsTwitterDataFetched, setShowStats,setPlatform,platform } = useContext<IAppContext | null>(AppContext) as IAppContext
+  const { isShowwcaseDataFetched, setIsShowwcaseDataFetched, isTwitterDataFetched, setIsTwitterDataFetched, setShowStats, setPlatform, platform, cardTheme, setCardTheme } = useContext<IAppContext | null>(AppContext) as IAppContext
   const [showwcaseFetchFailed, setShowwcaseFetchFailed] = useState<boolean>(false)
   const [twitterFetchFailed, setTwitterFetchFailed] = useState<boolean>(false)
 
@@ -220,6 +219,18 @@ export default function Home() {
       setShowwcaseFetchFailed(true)
     })
   }
+  const toggleCardTheme = () => {
+    console.log(cardTheme)
+    if (cardTheme === "light") {
+      setCardTheme("dark")
+      console.log("dark will show now")
+    }
+    else {
+      setCardTheme("light")
+      console.log("light will show now")
+
+    }
+  }
 
   return (
     <main className="min-h-screen w-full p-3 relative md:p-10 mx-auto">
@@ -274,7 +285,7 @@ export default function Home() {
       <div className="flex justify-center fixed bottom-0 right-0 py-5 w-full mx-auto">
         <div className="relative shadow-xl w-max rounded-xl">
           {/* COLOR PICKER */}
-          {showBackgroundPicker && <div onMouseLeave={() => setShowBackgroundPicker(false)} className="absolute flex gap-5 shadow-md p-5 rounded-md w-max bottom-[7rem] z-10 bg-white left-0">
+          {showBackgroundPicker && <div onMouseLeave={() => setShowBackgroundPicker(false)} className="absolute flex gap-5 shadow-md p-5 rounded-md w-max bottom-[7rem] z-10 bg-white left-0 dark:bg-dim">
             <div>
               <b className='mb-3 block'>Background color</b>
               <ul className="grid grid-cols-4 gap-2">
@@ -287,21 +298,27 @@ export default function Home() {
                 {GRADIENTS.map((item, index: number) => <li key={index} onClick={() => setBackground(item)} className="cursor-pointer hover:opacity-50 transition-all h-6 w-8 rounded-sm" style={{ background: item }}></li>)}
               </ul>
             </div>
-          </div>}
-          {showTemplateSelector && <div onMouseLeave={() => setShowTemplateSelector(false)} className="absolute flex gap-5 shadow-md p-5 rounded-md w-max bottom-[7rem] z-10 bg-white right-0">
-            <div>
-
-              <ul className="flex items-center gap-2 bg-white rounded-xl">
-                <li className={STYLES.control} onClick={() => setSelectedTemplate(availableTemplates[0])}>
-                  <IoEyedropSharp />
-                  <p>Thread</p>
-                </li>
-                <li className={STYLES.control} onClick={() => setSelectedTemplate(availableTemplates[1])}>
-                  <IoIosQuote />
-                  <p>Quote</p>
-                </li>
+            {/* <div>
+              <b className='mb-3 block'>Images</b>
+              <ul className="grid grid-cols-4 gap-2">
+                {IMAGES.map((item, index: number) => <li key={index} onClick={() => setBackground(`url(${ item })`)} className="cursor-pointer hover:opacity-50 transition-all h-6 w-8 rounded-sm" style={{ backgroundImage: `url(${item})` }}></li>)}
               </ul>
-            </div>
+            </div> */}
+          </div>}
+          {showTemplateSelector && <div onMouseLeave={() => setShowTemplateSelector(false)} className="absolute flex gap-5 shadow-md p-5 rounded-md w-max bottom-[7rem] z-10 bg-white right-14 dark:bg-dim">
+            {/* <div> */}
+
+            <ul className="flex items-center gap-2 rounded-xl">
+              <li className={STYLES.control} onClick={() => setSelectedTemplate(availableTemplates[0])}>
+                <IoEyedropSharp />
+                <p>Thread</p>
+              </li>
+              <li className={`${STYLES.control} px-3`} onClick={() => setSelectedTemplate(availableTemplates[1])}>
+                <IoIosQuote />
+                <p>Quote</p>
+              </li>
+            </ul>
+            {/* </div> */}
           </div>}
           {/* COLOR PICKER */}
 
@@ -319,14 +336,21 @@ export default function Home() {
               <IoCopy />
               <small>Copy</small>
             </li>
+            <li className={STYLES.control} onClick={() => toggleCardTheme()}>
+              <IoColorPalette />
+              <small>Theme-toggle</small>
+            </li>
             <li className={STYLES.control} onClick={() => setShowTemplateSelector(prev => !prev)}>
               <VscExtensions size={20} />
               <small>Templates</small>
             </li>
-            <li className={STYLES.control} onClick={() => setShowStats(prev => !prev)}>
-              <IoMdStats size={20} />
-              <small>Show Stats</small>
-            </li>
+            {
+              selectedTemplate === availableTemplates[0] &&
+              <li className={STYLES.control} onClick={() => setShowStats(prev => !prev)}>
+                <IoMdStats size={20} />
+                <small>Show Stats</small>
+              </li>
+            }
           </ul>
           {/* CONTROLBOX */}
         </div>

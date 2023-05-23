@@ -19,17 +19,17 @@ import TwitterPoll from '../Polls/TwitterPoll'
 
 const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, profileUrl, displayName, username, postContent, likeCount, replyCount, showwcasePostImages, twitterPostImages, showwcaseUserEmoji, verifiedTwitter, datePosted, showwcaseLink, twitterLink, showwcasePoll, twitterPoll }) => {
 
-    const { showStats } = useContext<IAppContext | null>(AppContext) as IAppContext
+    const { showStats,cardTheme } = useContext<IAppContext | null>(AppContext) as IAppContext
 
     return (
         <div>
             <>
-                <div className={` min-w-[400px] max-w-[650px] dark:text-black p-6 bg-white shadow-2xl rounded-2xl relative ${isLoading ? "flex items-center justify-center" : ""}`}>
+                <div className={` min-w-[400px] ${cardTheme==="dark"?"bg-dimmer text-white dark:text-white":"bg-white"} max-w-[650px] dark:text-black p-6 shadow-2xl rounded-2xl relative ${isLoading ? "flex items-center justify-center" : ""}`}>
                     {
                         isLoading ? <Loader /> : (<>
                             <div className="flex justify-between  items-center">
                                 <div className="flex gap-2 items-center">
-                                    <Image src={profileUrl} className="w-[50px] rounded-full h-[50px] object-cover" alt="user_profile" width={300} height={300} />
+                                    <img src={profileUrl} className="w-[50px] rounded-full h-[50px] object-cover" alt="user_profile" width={300} height={300} />
                                     <div className="flex flex-col">
                                         <span className='flex gap-1'>
                                             <b>{displayName}</b>
@@ -38,7 +38,7 @@ const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, p
                                         <small className="text-gray-500">@{username}</small>
                                     </div>
                                 </div>
-                                <Image src={`/assets/${platformLogo}`} alt={platform} width={50} height={50} className="w-[45px] rounded-full h-[45px] object-cover" />
+                                <img src={`/assets/${platformLogo}`} alt={platform} width={50} height={50} className="w-[45px] rounded-full h-[45px] object-cover" />
                             </div>
                             <p className="my-3" dangerouslySetInnerHTML={{ __html: linkifyUsernames(convertLinksToHTML(addHashtagLinks(postContent))) }} />
                             <div className={`grid ${(showwcasePostImages?.length === 1 || twitterPostImages?.length === 1) ? " " : "grid-cols-2"} gap-1`} id={(showwcasePostImages?.length === 3 || twitterPostImages?.length === 3) ? "three-images" : ""} >
@@ -80,11 +80,11 @@ const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, p
                                         <ul className='flex gap-3 '>
                                             <li className="flex items-center gap-1">
                                                 <AiTwotoneHeart className="text-red-400" size={17} />
-                                                <p className="text-gray-600 text-sm">{likeCount}</p>
+                                                <p className={`text-gray-600 ${cardTheme==="dark"&&"text-white"} text-sm`}>{likeCount}</p>
                                             </li>
                                             <li className="flex items-center gap-1">
                                                 <FaRegComment size={17} />
-                                                <p className="text-gray-600 text-sm">{replyCount}</p>
+                                                <p className={`text-gray-600 ${cardTheme === "dark" && "text-white"} text-sm`}>{replyCount}</p>
                                             </li>
                                         </ul>
                                     )

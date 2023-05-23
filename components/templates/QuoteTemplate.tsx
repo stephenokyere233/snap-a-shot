@@ -2,18 +2,21 @@
 import { TABS } from '@/constants/tabs'
 import { TthreadProps } from '@/types'
 import linkifyUsernames from '@/utils/formatPostContent.util'
-import React, { FC } from 'react'
+import React, { FC, useContext } from 'react'
 import Loader from '../loader'
 import Image from 'next/image'
 import ThreadLink from '../ThreadLink'
 import convertLinksToHTML from '@/utils/convertsLinksToHTML.util'
+import { AppContext } from '@/context'
+import { IAppContext } from '@/interfaces'
 
 const QuoteTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, profileUrl, displayName, username, postContent, likeCount, replyCount, showwcasePostImages, twitterPostImages, showwcaseUserEmoji, verifiedTwitter, datePosted, showwcaseLink }) => {
 
+  const {  cardTheme } = useContext<IAppContext | null>(AppContext) as IAppContext
   return (
-    <div>
+
       <>
-        <div className={`border min-w-[400px] max-w-[650px]  p-6 bg-white shadow-2xl rounded-2xl relative ${isLoading ? "flex items-center justify-center" : ""}`}>
+      <div className={`min-w-[400px] max-w-[650px] ${cardTheme === "dark" ? "bg-dimmer text-white dark:text-white" : "bg-white"}  p-6 dark:text-black shadow-2xl rounded-2xl relative ${isLoading ? "flex items-center justify-center" : ""}`}>
           {
             isLoading ? <Loader /> : (<>
               <div className="flex justify-between  items-center">
@@ -59,8 +62,6 @@ const QuoteTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, pr
 
         </div>
       </>
-
-    </div>
 
   )
 }

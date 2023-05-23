@@ -35,7 +35,7 @@ const Header = () => {
 
             </header>
             <ul className="bg-white  dark:bg-dim dark:border-dimmer mt-2 w-max mx-auto flex lg:hidden items-center border border-r-0">
-                {TABS.map((item, index: number) => <li onClick={() => setPlatform(item)} className={`border w-[200px] text-center  border-l-0 border-b-0 border-t-0 p-2 font-medium px-5 dark:border-dimmer cursor-pointer transition-all ${platform === item ? 'bg-blue-400 text-white border-l-0' : 'text-blue-400'}`} key={index}>{item}</li>)}
+                {TABS.map((item, index: number) => <li onClick={() => setPlatform(item)} className={`border w-[150px] text-center  border-l-0 border-b-0 border-t-0 p-2 font-medium px-5 dark:border-dimmer cursor-pointer transition-all ${platform === item ? 'bg-blue-400 text-white border-l-0' : 'text-blue-400'}`} key={index}>{item}</li>)}
             </ul>
         </>
     )

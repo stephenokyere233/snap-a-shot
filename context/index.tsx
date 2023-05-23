@@ -11,8 +11,9 @@ const AppProvider: React.FC<IAppProvider> = ({ children }) => {
     const [selectedBGColor, setSelectedBGColor] = useState<string>("linear-gradient(to right, #4776e6, #8e54e9)")
     const [showStats, setShowStats] = useState<boolean>(true)
     const [platform, setPlatform] = useState<string>(TABS[0])
+    const [cardTheme,setCardTheme]=useState<string>("light")
     return (
-        <AppContext.Provider value={{ isShowwcaseDataFetched, setIsShowwcaseDataFetched, isTwitterDataFetched, setIsTwitterDataFetched, selectedBGColor, setSelectedBGColor, showStats, setShowStats, platform, setPlatform }}>
+        <AppContext.Provider value={{ isShowwcaseDataFetched, setIsShowwcaseDataFetched, isTwitterDataFetched, setIsTwitterDataFetched, selectedBGColor, setSelectedBGColor, showStats, setShowStats, platform, setPlatform, cardTheme, setCardTheme }}>
             {children}
         </AppContext.Provider>
     )

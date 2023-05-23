@@ -11,6 +11,8 @@ export interface IAppContext {
     setShowStats: React.Dispatch<React.SetStateAction<boolean>>
     platform: string
     setPlatform: React.Dispatch<React.SetStateAction<string>>
+    cardTheme:string
+    setCardTheme: React.Dispatch<React.SetStateAction<string>>
 }
 
 export interface IAppProvider {
