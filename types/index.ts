@@ -16,4 +16,6 @@ export type TthreadProps = {
     showwwcaseMentions?:any[]
     showwcaseLink?:any
     twitterLink?:any
+    showwcasePoll?:any
+    twitterPoll?:any
 }
