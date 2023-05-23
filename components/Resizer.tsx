@@ -118,7 +118,7 @@ const Resizer: FC<resizerProps> = ({ children }) => {
 
 
     return (
-        <section id="resizer" className="border relative bg-transparent rounded-md overflow-hidden   box-shadow select-none " ref={ref}>
+        <section id="resizer" className="relative bg-transparent rounded-md overflow-hidden   box-shadow select-none " ref={ref}>
             <div className="top-1/2 right-0 -translate-y-1/2 translate-x-1/2 cursor-ew-resize absolute flex items-center justify-center w-8 h-8 group pointer-events-auto" ref={refRight} >
                 <div className="w-5 h-8 lg:w-2.5 lg:h-5 rounded bg-white group-hover:scale-150 transition-transform shadow-md">
                 </div>

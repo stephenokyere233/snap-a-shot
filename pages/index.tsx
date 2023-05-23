@@ -222,11 +222,11 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen w-full bg-gray-50 p-3 relative md:p-10 mx-auto">
+    <main className="min-h-screen w-full p-3 relative md:p-10 mx-auto">
       <div>
         <Header />
         <div className="my-5 flex flex-col gap-3 items-center justify-center" >
-          <input value={link} onChange={handleChange} placeholder={`Paste ${platform} link here...`} className="text-gray-500 w-full p-2 px-3 border rounded-xl outline-blue-300 shadow-md max-w-xl" />
+          <input value={link} onChange={handleChange} placeholder={`Paste ${platform} link here...`} className="text-gray-500 w-full p-2 px-3 border dark:border-dimmer rounded-xl outline-blue-300 dark:text-white dark:outline-dim shadow-md max-w-xl dark:bg-dim" />
           {
             error &&
             <p className="text-red-500 text-center capitalize">{errorMessage}</p>
@@ -271,7 +271,7 @@ export default function Home() {
         </Resizer>
       </div>
 
-      <div className="flex justify-center fixed bottom-0 border border-red-500 py-5 w-[95%] mx-auto">
+      <div className="flex justify-center fixed bottom-0 right-0 py-5 w-full mx-auto">
         <div className="relative shadow-xl w-max rounded-xl">
           {/* COLOR PICKER */}
           {showBackgroundPicker && <div onMouseLeave={() => setShowBackgroundPicker(false)} className="absolute flex gap-5 shadow-md p-5 rounded-md w-max bottom-[7rem] z-10 bg-white left-0">
@@ -306,7 +306,7 @@ export default function Home() {
           {/* COLOR PICKER */}
 
           {/* CONTROLBOX */}
-          <ul className="p-3 flex justify-center items-center gap-2 bg-white rounded-xl">
+          <ul className="p-3 md:px-6 dark:bg-dim flex justify-center items-center gap-2 md:gap-6 lg:text-xl bg-white rounded-xl">
             <li className={STYLES.control} onClick={() => setShowBackgroundPicker(!showBackgroundPicker)}>
               <IoEyedropSharp />
               <small>Background</small>

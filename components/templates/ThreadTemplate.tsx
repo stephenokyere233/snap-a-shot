@@ -24,7 +24,7 @@ const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, p
     return (
         <div>
             <>
-                <div className={` min-w-[400px] max-w-[650px] p-6 bg-white shadow-2xl rounded-2xl relative ${isLoading ? "flex items-center justify-center" : ""}`}>
+                <div className={` min-w-[400px] max-w-[650px] dark:text-black p-6 bg-white shadow-2xl rounded-2xl relative ${isLoading ? "flex items-center justify-center" : ""}`}>
                     {
                         isLoading ? <Loader /> : (<>
                             <div className="flex justify-between  items-center">
