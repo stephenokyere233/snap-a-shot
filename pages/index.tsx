@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { FormEvent, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Resizer from "@/components/Resizer";
 import ThreadTemplate from "@/components/templates/ThreadTemplate";
@@ -14,10 +14,13 @@ import { COLORS } from "@/constants/colors"
 import { GRADIENTS } from "@/constants/gradients"
 import { DUMMY_TEMP } from "@/constants/dummy_template"
 import QuoteTemplate from "@/components/templates/QuoteTemplate";
-import * as htmlToImage from 'html-to-image';
-import toast from "react-hot-toast";
 import removeLastURL from "@/utils/removeLastURL.util";
 import useDebounce from "@/hooks/useDebounce";
+import removeQuery from "@/utils/removeQuery.util";
+import Header from "@/components/Header";
+import {STYLES} from "@/constants/styles"
+import copyImage from "@/utils/copyImage.util";
+import downloadImage from "@/utils/downloadImage.util";
 
 
 
@@ -26,7 +29,6 @@ export default function Home() {
   const [showTemplateSelector, setShowTemplateSelector] = useState<boolean>(false)
   const [selectedTemplate, setSelectedTemplate] = useState<string>("thread")
   const [background, setBackground] = useState(GRADIENTS[7])
-  const [platform, setPlatform] = useState(TABS[0])
   const [link, setLink] = useState('')
   const [user, setUser] = useState<any>(null)
   const [tweetInfo, setTweetInfo] = useState<any>(null)
@@ -37,7 +39,7 @@ export default function Home() {
   const [isValidTwitterLink, setIsValidTwitterLink] = useState<boolean>(false)
   const [error, setError] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string | null>("")
-  const { isShowwcaseDataFetched, setIsShowwcaseDataFetched, isTwitterDataFetched, setIsTwitterDataFetched, setShowStats } = useContext<IAppContext | null>(AppContext) as IAppContext
+  const { isShowwcaseDataFetched, setIsShowwcaseDataFetched, isTwitterDataFetched, setIsTwitterDataFetched, setShowStats,setPlatform,platform } = useContext<IAppContext | null>(AppContext) as IAppContext
   const [showwcaseFetchFailed, setShowwcaseFetchFailed] = useState<boolean>(false)
   const [twitterFetchFailed, setTwitterFetchFailed] = useState<boolean>(false)
 
@@ -52,13 +54,6 @@ export default function Home() {
     "thread",
     "quote"
   ]
-  const removeQuery = (link: string) => {
-    if (link.includes("?")) {
-      const newLink = link.split("?")
-      link = newLink[0]
-    }
-    return link
-  }
 
   useEffect(
     () => {
@@ -78,7 +73,7 @@ export default function Home() {
       setIsValidTwitterLink(false)
       const showwcaseThreadID = showwcaseLinkArray[1]
       setThreadID(showwcaseThreadID)
-      console.log("valid showwcase link")
+      // console.log("valid showwcase link")
     } else if (newLink.includes(LinksToCheck[1]) && newLink.includes("/status/")) {
       const linkArray = newLink.split("/status/")
       console.log(newLink)
@@ -86,7 +81,7 @@ export default function Home() {
       setIsValidShowwcaseLink(false)
       const newTwitterPostID = linkArray[1]
       setThreadID(newTwitterPostID)
-      console.log("valid twitter link")
+      // console.log("valid twitter link")
     }
     else {
       if (platform === TABS[0]) {
@@ -162,65 +157,6 @@ export default function Home() {
 
   }
 
-  const downloadImage = () => {
-    const shotElement = document.querySelector('#shot');
-    if (!shotElement) return
-    const toastId = toast.loading("Downloading...")
-    htmlToImage.toPng(shotElement as HTMLElement)
-      .then(function (dataUrl) {
-        var link = document.createElement('a');
-        link.download = "new-shot-" + Date.now() + '.png';
-        link.href = dataUrl;
-        link.click();
-        toast.success('Downloaded successfully');
-        toast.dismiss(toastId)
-      });
-  }
-
-  const copyImage = () => {
-    const shotElement = document.querySelector('#shot') as HTMLElement | null;
-    if (!shotElement) return;
-
-    const canvasElement = document.createElement('canvas');
-    const context = canvasElement.getContext('2d');
-
-    if (!context) {
-      console.error('Unable to create canvas context');
-      return;
-    }
-
-    const toastId = toast.loading("Copying...");
-
-    htmlToImage.toPng(shotElement)
-      .then(function (dataUrl: string) {
-        const imageElement = new Image();
-        imageElement.onload = function () {
-          canvasElement.width = imageElement.width;
-          canvasElement.height = imageElement.height;
-          context.drawImage(imageElement, 0, 0);
-          canvasElement.toBlob(function (blob) {
-            if (!blob) {
-              console.error('Unable to create blob');
-              return;
-            }
-            const item = new ClipboardItem({ "image/png": blob });
-            navigator.clipboard.write([item]).then(function () {
-              toast.success('Saved to clipboard');
-              toast.dismiss(toastId);
-            }, function (err) {
-              toast.error('Error saving to clipboard: ', err);
-              toast.dismiss(toastId);
-            });
-          });
-        };
-        imageElement.src = dataUrl;
-      })
-      .catch(function (error) {
-        console.error('Error copying image:', error);
-        toast.error('Error copying image:', error);
-        toast.dismiss(toastId);
-      });
-  };
 
   const fetchTwitterPost = async (twitterPostID: string) => {
     setLoading(true)
@@ -286,17 +222,11 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 p-10">
+    <main className="min-h-screen w-full p-3 relative md:p-10 mx-auto">
       <div>
-        <header className="flex items-center justify-between">
-          <b>SNAP-A-SHOT</b>
-          <ul className="bg-white w-max flex items-center border border-r-0">
-            {TABS.map((item, index: number) => <li onClick={() => setPlatform(item)} className={`border border-l-0 border-b-0 border-t-0 p-2 font-medium px-5 cursor-pointer transition-all ${platform === item ? 'bg-blue-400 text-white border-l-0' : 'text-blue-400'}`} key={index}>{item}</li>)}
-          </ul>
-          <FiSun />
-        </header>
+        <Header />
         <div className="my-5 flex flex-col gap-3 items-center justify-center" >
-          <input value={link} onChange={handleChange} placeholder={`Paste ${platform} link here...`} className="text-gray-500 w-full p-2 px-3 border rounded-xl outline-blue-300 shadow-md max-w-xl" />
+          <input value={link} onChange={handleChange} placeholder={`Paste ${platform} link here...`} className="text-gray-500 w-full p-2 px-3 border dark:border-dimmer rounded-xl outline-blue-300 dark:text-white dark:outline-dim shadow-md max-w-xl dark:bg-dim" />
           {
             error &&
             <p className="text-red-500 text-center capitalize">{errorMessage}</p>
@@ -304,7 +234,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="flex items-center justify-center pb-44">
+      <div className="flex items-center justify-center pb-44 ">
         <Resizer>
           <section style={{ background: background }} id="shot" className="transition-all w-full h-full p-20 flex justify-center items-center bg-cover object-cover bg-no-repeat">
             {
@@ -314,7 +244,7 @@ export default function Home() {
                   (showwcaseFetchFailed ? <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={`Failed to fetch ${platform}`} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} /> :
                     (isShowwcaseDataFetched ?
                       <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={user?.profilePictureUrl
-                      } displayName={threadInfo.user.displayName} username={threadInfo.user.username} postContent={threadInfo.message} likeCount={threadInfo.totalUpvotes} replyCount={threadInfo.totalReplies} platform={TABS[0]} showwcasePostImages={threadInfo.images} showwcaseUserEmoji={threadInfo.user.activity.emoji} datePosted={threadInfo.createdAt} showwcaseLink={threadInfo.linkPreviewMeta} /> :
+                      } displayName={threadInfo.user.displayName} username={threadInfo.user.username} postContent={threadInfo.message} likeCount={threadInfo.totalUpvotes} replyCount={threadInfo.totalReplies} platform={TABS[0]} showwcasePostImages={threadInfo.images} showwcaseUserEmoji={threadInfo.user.activity.emoji} datePosted={threadInfo.createdAt} showwcaseLink={threadInfo.linkPreviewMeta} showwcasePoll={threadInfo.poll} /> :
                       <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} />
                     )) :
                   (showwcaseFetchFailed ? <QuoteTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={`Failed to fetch ${platform}`} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} /> :
@@ -327,12 +257,12 @@ export default function Home() {
                   (twitterFetchFailed ? <ThreadTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={`Failed to fetch ${platform}`} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} /> :
                     (isTwitterDataFetched ?
                       <ThreadTemplate platformLogo="twitter.svg" platform={TABS[1]} isLoading={loading} profileUrl={tweetInfo.includes.users[0].profile_image_url} displayName={tweetInfo.includes.users[0].name}
-                        username={tweetInfo.includes.users[0].username} postContent={removeLastURL(tweetInfo.data.text)} likeCount={tweetInfo.data.public_metrics.like_count} replyCount={tweetInfo.data.public_metrics.reply_count} twitterPostImages={tweetInfo.includes.media} verifiedTwitter={tweetInfo.includes.users[0].verified} datePosted={tweetInfo.data.created_at} twitterLink={tweetInfo.data.entities.urls ? tweetInfo.data.entities.urls[0] : ""} /> :
+                        username={tweetInfo.includes.users[0].username} postContent={removeLastURL(tweetInfo.data.text)} likeCount={tweetInfo.data.public_metrics.like_count} replyCount={tweetInfo.data.public_metrics.reply_count} twitterPostImages={tweetInfo.includes.media} verifiedTwitter={tweetInfo.includes.users[0].verified} datePosted={tweetInfo.data.created_at} twitterLink={tweetInfo.data.entities ? tweetInfo.data.entities.urls[0] : ""} /> :
                       <ThreadTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} />
                     )) :
                   (twitterFetchFailed ? <QuoteTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={`Failed to fetch ${platform}`} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} /> :
                     (isTwitterDataFetched ? <QuoteTemplate platformLogo="twitter.svg" platform={TABS[1]} isLoading={loading} profileUrl={tweetInfo.includes.users[0].profile_image_url} displayName={tweetInfo.includes.users[0].name}
-                      username={tweetInfo.includes.users[0].username} postContent={removeLastURL(tweetInfo.data.text)} likeCount={tweetInfo.data.public_metrics.like_count} replyCount={tweetInfo.data.public_metrics.reply_count} twitterPostImages={tweetInfo.includes.media} verifiedTwitter={tweetInfo.includes.users[0].verified} datePosted={tweetInfo.data.created_at} /> :
+                      username={tweetInfo.includes.users[0].username} postContent={removeLastURL(tweetInfo.data.text)} likeCount={tweetInfo.data.public_metrics.like_count} replyCount={tweetInfo.data.public_metrics.reply_count} twitterPostImages={tweetInfo.includes.media} verifiedTwitter={tweetInfo.includes.users[0].verified} datePosted={tweetInfo.data.created_at} twitterLink={tweetInfo.data.entities ? tweetInfo.data.entities.urls[0] : ""} /> :
                       <QuoteTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} />
                     )))
 
@@ -341,7 +271,7 @@ export default function Home() {
         </Resizer>
       </div>
 
-      <div className="flex justify-center fixed bottom-0 w-screen py-5">
+      <div className="flex justify-center fixed bottom-0 right-0 py-5 w-full mx-auto">
         <div className="relative shadow-xl w-max rounded-xl">
           {/* COLOR PICKER */}
           {showBackgroundPicker && <div onMouseLeave={() => setShowBackgroundPicker(false)} className="absolute flex gap-5 shadow-md p-5 rounded-md w-max bottom-[7rem] z-10 bg-white left-0">
@@ -362,11 +292,11 @@ export default function Home() {
             <div>
 
               <ul className="flex items-center gap-2 bg-white rounded-xl">
-                <li className="select-none relative flex flex-col items-center cursor-pointer hover:bg-gray-50 transition-all py-3 gap-1 px-5 rounded-md hover:text-blue-400 text-gray-500" onClick={() => setSelectedTemplate(availableTemplates[0])}>
+                <li className={STYLES.control} onClick={() => setSelectedTemplate(availableTemplates[0])}>
                   <IoEyedropSharp />
                   <p>Thread</p>
                 </li>
-                <li className="select-none relative flex flex-col items-center cursor-pointer hover:bg-gray-50 transition-all py-3 gap-1 px-5 rounded-md hover:text-blue-400 text-gray-500" onClick={() => setSelectedTemplate(availableTemplates[1])}>
+                <li className={STYLES.control} onClick={() => setSelectedTemplate(availableTemplates[1])}>
                   <IoIosQuote />
                   <p>Quote</p>
                 </li>
@@ -376,26 +306,26 @@ export default function Home() {
           {/* COLOR PICKER */}
 
           {/* CONTROLBOX */}
-          <ul className="p-3 flex items-center gap-2 bg-white rounded-xl">
-            <li className="select-none relative flex flex-col items-center cursor-pointer hover:bg-gray-50 transition-all py-3 gap-1 px-5 rounded-md hover:text-blue-400 text-gray-500" onClick={() => setShowBackgroundPicker(!showBackgroundPicker)}>
+          <ul className="p-3 md:px-6 dark:bg-dim flex justify-center items-center gap-2 md:gap-6 lg:text-xl bg-white rounded-xl">
+            <li className={STYLES.control} onClick={() => setShowBackgroundPicker(!showBackgroundPicker)}>
               <IoEyedropSharp />
-              <p>Background</p>
+              <small>Background</small>
             </li>
-            <li className="select-none relative flex flex-col items-center cursor-pointer hover:bg-gray-50 transition-all py-3 gap-1 px-5 rounded-md hover:text-blue-400 text-gray-500" onClick={downloadImage}>
+            <li className={STYLES.control} onClick={downloadImage}>
               <FiDownload size={20} />
-              <p>Download</p>
+              <small>Download</small>
             </li>
-            <li className="select-none relative flex flex-col items-center cursor-pointer hover:bg-gray-50 transition-all py-3 gap-1 px-5 rounded-md hover:text-blue-400 text-gray-500" onClick={copyImage}>
+            <li className={STYLES.control} onClick={copyImage}>
               <IoCopy />
-              <p>Copy</p>
+              <small>Copy</small>
             </li>
-            <li className="select-none relative flex flex-col items-center cursor-pointer hover:bg-gray-50 transition-all py-3 gap-1 px-5 rounded-md hover:text-blue-400 text-gray-500" onClick={() => setShowTemplateSelector(prev => !prev)}>
+            <li className={STYLES.control} onClick={() => setShowTemplateSelector(prev => !prev)}>
               <VscExtensions size={20} />
-              <p>Templates</p>
+              <small>Templates</small>
             </li>
-            <li className="select-none relative flex flex-col items-center cursor-pointer hover:bg-gray-50 transition-all py-3 gap-1 px-5 rounded-md hover:text-blue-400 text-gray-500" onClick={() => setShowStats(prev => !prev)}>
+            <li className={STYLES.control} onClick={() => setShowStats(prev => !prev)}>
               <IoMdStats size={20} />
-              <p>Show Stats</p>
+              <small>Show Stats</small>
             </li>
           </ul>
           {/* CONTROLBOX */}
