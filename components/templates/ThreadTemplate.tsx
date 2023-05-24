@@ -19,12 +19,12 @@ import TwitterPoll from '../Polls/TwitterPoll'
 
 const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, profileUrl, displayName, username, postContent, likeCount, replyCount, showwcasePostImages, twitterPostImages, showwcaseUserEmoji, verifiedTwitter, datePosted, showwcaseLink, twitterLink, showwcasePoll, twitterPoll }) => {
 
-    const { showStats,cardTheme } = useContext<IAppContext | null>(AppContext) as IAppContext
+    const { showStats, cardTheme } = useContext<IAppContext | null>(AppContext) as IAppContext
 
     return (
         <div>
             <>
-                <div className={` min-w-[400px] ${cardTheme==="dark"?"bg-dimmer text-white dark:text-white":"bg-white"} max-w-[650px] dark:text-black p-6 shadow-2xl rounded-2xl relative ${isLoading ? "flex items-center justify-center" : ""}`}>
+                <div className={` lg:min-w-[400px]  ${cardTheme === "dark" ? "bg-dimmer text-white dark:text-white" : "bg-white"} max-w-[650px] dark:text-black p-6 shadow-2xl rounded-2xl relative ${isLoading ? "flex items-center justify-center" : ""}`}>
                     {
                         isLoading ? <Loader /> : (<>
                             <div className="flex justify-between  items-center">
@@ -58,7 +58,7 @@ const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, p
                             {
                                 platform === TABS[0] ? (
                                     (postContent.length < 350 && (showwcasePostImages && showwcasePostImages?.length < 1)) && (
-                                        (showwcaseLink !=="null"  && showwcaseLink.type !== "thread") && <ThreadLink title={showwcaseLink.title} description={showwcaseLink.description} url={showwcaseLink.url} images={showwcaseLink.images} />
+                                        ((showwcaseLink && showwcaseLink !== "null") && showwcaseLink.type !== "thread") && <ThreadLink title={showwcaseLink.title} description={showwcaseLink.description} url={showwcaseLink.url} images={showwcaseLink.images} />
                                     )
                                 )
                                     : <></>
@@ -67,11 +67,11 @@ const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, p
                                 // )
                             }
                             {
-                                platform===TABS[0]?(
-                                    showwcasePoll&&<ShowwcasePoll options={showwcasePoll.options} totalVotes={showwcasePoll.totalVotes}/>
+                                platform === TABS[0] ? (
+                                    showwcasePoll && <ShowwcasePoll options={showwcasePoll.options} totalVotes={showwcasePoll.totalVotes} />
 
-                                ):(
-                                    twitterPoll && <TwitterPoll/>
+                                ) : (
+                                    twitterPoll && <TwitterPoll />
                                 )
                             }
                             <div className='flex justify-between items-center mt-3'>
@@ -80,7 +80,7 @@ const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, p
                                         <ul className='flex gap-3 '>
                                             <li className="flex items-center gap-1">
                                                 <AiTwotoneHeart className="text-red-400" size={17} />
-                                                <p className={`text-gray-600 ${cardTheme==="dark"&&"text-white"} text-sm`}>{likeCount}</p>
+                                                <p className={`text-gray-600 ${cardTheme === "dark" && "text-white"} text-sm`}>{likeCount}</p>
                                             </li>
                                             <li className="flex items-center gap-1">
                                                 <FaRegComment size={17} />

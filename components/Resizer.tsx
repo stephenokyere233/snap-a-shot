@@ -48,10 +48,10 @@ const Resizer: FC<resizerProps> = ({ children }) => {
             console.log(dy, "dy")
             height = height + dy;
             y = event.clientY;
-            console.log(y,"clienty")
+            console.log(y, "clienty")
             const element = document.querySelector("#resizer")
             const shotElement = document.querySelector("#shot")
-            console.log(shotElement?.clientHeight,"height shot")
+            console.log(shotElement?.clientHeight, "height shot")
             const width = element?.clientWidth
             console.log(width)
             // if(width<425){
@@ -61,7 +61,7 @@ const Resizer: FC<resizerProps> = ({ children }) => {
             //     return
             // }
             // else{
-                resizeableElement.style.height = `${height}px`;
+            resizeableElement.style.height = `${height}px`;
 
             // }
 
@@ -118,7 +118,7 @@ const Resizer: FC<resizerProps> = ({ children }) => {
 
 
     return (
-        <section id="resizer" className="relative bg-transparent rounded-md overflow-hidden   box-shadow select-none " ref={ref}>
+        <section id="resizer" className="relative bg-transparent rounded-md overflow-hidden box-shadow select-none " ref={ref}>
             <div className="top-1/2 right-0 -translate-y-1/2 translate-x-1/2 cursor-ew-resize absolute flex items-center justify-center w-8 h-8 group pointer-events-auto" ref={refRight} >
                 <div className="w-5 h-8 lg:w-2.5 lg:h-5 rounded bg-white group-hover:scale-150 transition-transform shadow-md">
                 </div>

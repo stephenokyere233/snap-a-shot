@@ -20,8 +20,8 @@ const Header = () => {
     }
     return (
         <>
-            <header className="flex items-center justify-between">
-                <b>SNAP-A-SHOT</b>
+            <header className="flex items-center justify-between ">
+                <b className='text-xl'>SNAP-A-SHOT</b>
                 <ul className="bg-white dark:bg-dim dark:border-dimmer hidden w-max lg:flex items-center border border-r-0">
                     {TABS.map((item, index: number) => <li onClick={() => setPlatform(item)} className={`border border-l-0 dark:border-dimmer border-b-0 border-t-0 p-2 font-medium px-5 cursor-pointer transition-all ${platform === item ? 'bg-blue-400 text-white border-l-0' : 'text-blue-400'}`} key={index}>{item}</li>)}
                 </ul>
@@ -29,7 +29,7 @@ const Header = () => {
                 <div className='cursor-pointer'>
                     {
                         theme === "dark" ?
-                            <FiSun onClick={toggleTheme} /> : <FiMoon onClick={toggleTheme} />
+                            <FiSun onClick={toggleTheme} size={28} /> : <FiMoon onClick={toggleTheme} size={28} />
                     }
                 </div>
 

@@ -26,6 +26,7 @@ import downloadImage from "@/utils/downloadImage.util";
 export default function Home() {
   const [showBackgroundPicker, setShowBackgroundPicker] = useState(false)
   const [showTemplateSelector, setShowTemplateSelector] = useState<boolean>(false)
+  const [showSettings, setShowSettings] = useState<boolean>(false)
   const [selectedTemplate, setSelectedTemplate] = useState<string>("thread")
   const [background, setBackground] = useState(GRADIENTS[7])
   const [link, setLink] = useState('')
@@ -221,6 +222,8 @@ export default function Home() {
   }
   const toggleCardTheme = () => {
     console.log(cardTheme)
+    setShowTemplateSelector(false)
+    setShowSettings(false)
     if (cardTheme === "light") {
       setCardTheme("dark")
       console.log("dark will show now")
@@ -233,8 +236,8 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen w-full p-3 relative md:p-10 mx-auto">
-      <div>
+    <main className="min-h-screen flex flex-col w-full  relative  mx-auto">
+      <div className="p-3 md:p-6">
         <Header />
         <div className="my-5 flex flex-col gap-3 items-center justify-center" >
           <input value={link} onChange={handleChange} placeholder={`Paste ${platform} link here...`} className="text-gray-500 w-full p-2 px-3 border dark:border-dimmer rounded-xl outline-blue-300 dark:text-white dark:outline-dim shadow-md max-w-xl dark:bg-dim" />
@@ -245,116 +248,122 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="flex items-center justify-center pb-44 ">
-        <Resizer>
-          <section style={{ background: background }} id="shot" className="transition-all w-full h-full p-20 flex justify-center items-center bg-cover object-cover bg-no-repeat">
-            {
-              // IF SELECTED TAB IS SHOWCASE
-              platform === TABS[0] ?
-                (selectedTemplate === availableTemplates[0] ?
-                  (showwcaseFetchFailed ? <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={`Failed to fetch ${platform}`} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} /> :
-                    (isShowwcaseDataFetched ?
-                      <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={user?.profilePictureUrl
-                      } displayName={threadInfo.user.displayName} username={threadInfo.user.username} postContent={threadInfo.message} likeCount={threadInfo.totalUpvotes} replyCount={threadInfo.totalReplies} platform={TABS[0]} showwcasePostImages={threadInfo.images} showwcaseUserEmoji={threadInfo.user.activity.emoji} datePosted={threadInfo.createdAt} showwcaseLink={threadInfo.linkPreviewMeta} showwcasePoll={threadInfo.poll} /> :
-                      <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} />
-                    )) :
-                  (showwcaseFetchFailed ? <QuoteTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={`Failed to fetch ${platform}`} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} /> :
-                    (isShowwcaseDataFetched ? <QuoteTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={user?.profilePictureUrl
-                    } displayName={threadInfo.user.displayName} username={threadInfo.user.username} postContent={threadInfo.message} likeCount={threadInfo.totalUpvotes} replyCount={threadInfo.totalReplies} platform={TABS[0]} showwcasePostImages={threadInfo.images} showwcaseUserEmoji={threadInfo.user.activity.emoji} datePosted={threadInfo.createdAt
-                    } showwcaseLink={threadInfo.linkPreviewMeta} /> :
-                      <QuoteTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} />
-                    ))) :
-                (selectedTemplate === availableTemplates[0] ?
-                  (twitterFetchFailed ? <ThreadTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={`Failed to fetch ${platform}`} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} /> :
-                    (isTwitterDataFetched ?
-                      <ThreadTemplate platformLogo="twitter.svg" platform={TABS[1]} isLoading={loading} profileUrl={tweetInfo.includes.users[0].profile_image_url} displayName={tweetInfo.includes.users[0].name}
+      <div className="grid place-items-center h-full  overflow-y-scroll flex-1 items-center justify-center p-4 pb-44 overflow-auto w-full ">
+        {/* <section className="grid place-items-center border "> */}
+          <Resizer>
+            <section style={{ background: background }} id="shot" className="transition-all w-full h-full  p-10 lg:p-20 flex justify-center items-center bg-cover object-cover bg-no-repeat" >
+              {
+                // IF SELECTED TAB IS SHOWCASE
+                platform === TABS[0] ?
+                  (selectedTemplate === availableTemplates[0] ?
+                    (showwcaseFetchFailed ? <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={`Failed to fetch ${platform}`} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} /> :
+                      (isShowwcaseDataFetched ?
+                        <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={user?.profilePictureUrl
+                        } displayName={threadInfo.user.displayName} username={threadInfo.user.username} postContent={threadInfo.message} likeCount={threadInfo.totalUpvotes} replyCount={threadInfo.totalReplies} platform={TABS[0]} showwcasePostImages={threadInfo.images} showwcaseUserEmoji={threadInfo.user.activity.emoji} datePosted={threadInfo.createdAt} showwcaseLink={threadInfo.linkPreviewMeta} showwcasePoll={threadInfo.poll} /> :
+                        <ThreadTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} />
+                      )) :
+                    (showwcaseFetchFailed ? <QuoteTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={`Failed to fetch ${platform}`} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} /> :
+                      (isShowwcaseDataFetched ? <QuoteTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={user?.profilePictureUrl
+                      } displayName={threadInfo.user.displayName} username={threadInfo.user.username} postContent={threadInfo.message} likeCount={threadInfo.totalUpvotes} replyCount={threadInfo.totalReplies} platform={TABS[0]} showwcasePostImages={threadInfo.images} showwcaseUserEmoji={threadInfo.user.activity.emoji} datePosted={threadInfo.createdAt
+                      } showwcaseLink={threadInfo.linkPreviewMeta} /> :
+                        <QuoteTemplate platformLogo="showwcase.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} />
+                      ))) :
+                  (selectedTemplate === availableTemplates[0] ?
+                    (twitterFetchFailed ? <ThreadTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={`Failed to fetch ${platform}`} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} /> :
+                      (isTwitterDataFetched ?
+                        <ThreadTemplate platformLogo="twitter.svg" platform={TABS[1]} isLoading={loading} profileUrl={tweetInfo.includes.users[0].profile_image_url} displayName={tweetInfo.includes.users[0].name}
+                          username={tweetInfo.includes.users[0].username} postContent={removeLastURL(tweetInfo.data.text)} likeCount={tweetInfo.data.public_metrics.like_count} replyCount={tweetInfo.data.public_metrics.reply_count} twitterPostImages={tweetInfo.includes.media} verifiedTwitter={tweetInfo.includes.users[0].verified} datePosted={tweetInfo.data.created_at} twitterLink={tweetInfo.data.entities ? tweetInfo.data.entities.urls[0] : ""} /> :
+                        <ThreadTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} />
+                      )) :
+                    (twitterFetchFailed ? <QuoteTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={`Failed to fetch ${platform}`} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} /> :
+                      (isTwitterDataFetched ? <QuoteTemplate platformLogo="twitter.svg" platform={TABS[1]} isLoading={loading} profileUrl={tweetInfo.includes.users[0].profile_image_url} displayName={tweetInfo.includes.users[0].name}
                         username={tweetInfo.includes.users[0].username} postContent={removeLastURL(tweetInfo.data.text)} likeCount={tweetInfo.data.public_metrics.like_count} replyCount={tweetInfo.data.public_metrics.reply_count} twitterPostImages={tweetInfo.includes.media} verifiedTwitter={tweetInfo.includes.users[0].verified} datePosted={tweetInfo.data.created_at} twitterLink={tweetInfo.data.entities ? tweetInfo.data.entities.urls[0] : ""} /> :
-                      <ThreadTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} />
-                    )) :
-                  (twitterFetchFailed ? <QuoteTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={`Failed to fetch ${platform}`} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} /> :
-                    (isTwitterDataFetched ? <QuoteTemplate platformLogo="twitter.svg" platform={TABS[1]} isLoading={loading} profileUrl={tweetInfo.includes.users[0].profile_image_url} displayName={tweetInfo.includes.users[0].name}
-                      username={tweetInfo.includes.users[0].username} postContent={removeLastURL(tweetInfo.data.text)} likeCount={tweetInfo.data.public_metrics.like_count} replyCount={tweetInfo.data.public_metrics.reply_count} twitterPostImages={tweetInfo.includes.media} verifiedTwitter={tweetInfo.includes.users[0].verified} datePosted={tweetInfo.data.created_at} twitterLink={tweetInfo.data.entities ? tweetInfo.data.entities.urls[0] : ""} /> :
-                      <QuoteTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} />
-                    )))
+                        <QuoteTemplate platformLogo="twitter.svg" isLoading={loading} profileUrl={DUMMY_TEMP.profileUrl} displayName={DUMMY_TEMP.displayName} username={DUMMY_TEMP.username} postContent={DUMMY_TEMP.postContent} likeCount={DUMMY_TEMP.likeCount} replyCount={DUMMY_TEMP.replyCount} platform={TABS[0]} datePosted={new Date().toString()} />
+                      )))
 
-            }
-          </section>
-        </Resizer>
+              }
+            </section>
+          </Resizer>
+
+        {/* </section> */}
       </div>
 
-      <div className="flex justify-center fixed bottom-0 right-0 py-5 w-full mx-auto">
-        <div className="relative shadow-xl w-max rounded-xl">
-          {/* COLOR PICKER */}
-          {showBackgroundPicker && <div onMouseLeave={() => setShowBackgroundPicker(false)} className="absolute flex gap-5 shadow-md p-5 rounded-md w-max bottom-[7rem] z-10 bg-white left-0 dark:bg-dim">
-            <div>
-              <b className='mb-3 block'>Background color</b>
-              <ul className="grid grid-cols-4 gap-2">
-                {COLORS.map((item, index: number) => <li key={index} onClick={() => setBackground(item)} className="cursor-pointer hover:opacity-50 transition-all h-6 w-8 rounded-sm" style={{ background: item }}></li>)}
-              </ul>
-            </div>
-            <div>
-              <b className='mb-3 block'>Gradients</b>
-              <ul className="grid grid-cols-4 gap-2">
-                {GRADIENTS.map((item, index: number) => <li key={index} onClick={() => setBackground(item)} className="cursor-pointer hover:opacity-50 transition-all h-6 w-8 rounded-sm" style={{ background: item }}></li>)}
-              </ul>
-            </div>
-            {/* <div>
-              <b className='mb-3 block'>Images</b>
-              <ul className="grid grid-cols-4 gap-2">
-                {IMAGES.map((item, index: number) => <li key={index} onClick={() => setBackground(`url(${ item })`)} className="cursor-pointer hover:opacity-50 transition-all h-6 w-8 rounded-sm" style={{ backgroundImage: `url(${item})` }}></li>)}
-              </ul>
-            </div> */}
-          </div>}
-          {showTemplateSelector && <div onMouseLeave={() => setShowTemplateSelector(false)} className="absolute flex gap-5 shadow-md p-5 rounded-md w-max bottom-[7rem] z-10 bg-white right-14 dark:bg-dim">
-            {/* <div> */}
-
-            <ul className="flex items-center gap-2 rounded-xl">
-              <li className={STYLES.control} onClick={() => setSelectedTemplate(availableTemplates[0])}>
-                <IoEyedropSharp />
-                <p>Thread</p>
-              </li>
-              <li className={`${STYLES.control} px-3`} onClick={() => setSelectedTemplate(availableTemplates[1])}>
-                <IoIosQuote />
-                <p>Quote</p>
-              </li>
-            </ul>
-            {/* </div> */}
-          </div>}
-          {/* COLOR PICKER */}
-
+      <section className="flex justify-center fixed bottom-0  w-full mx-auto">
+        <div className="relative shadow-xl w-max rounded-xl" onMouseLeave={() => {
+          setShowTemplateSelector(false); setShowSettings(false); setShowBackgroundPicker(false)
+        }}>
           {/* CONTROLBOX */}
-          <ul className="p-3 md:px-6 dark:bg-dim flex justify-center items-center gap-2 md:gap-6 lg:text-xl bg-white rounded-xl">
-            <li className={STYLES.control} onClick={() => setShowBackgroundPicker(!showBackgroundPicker)}>
+          <ul className="m-3 lg:m-0 p-3 flex-wrap dark:bg-dim flex justify-center items-center gap-2 lg:text-xl bg-gray-200  rounded-xl" >
+            {showBackgroundPicker && <div onMouseLeave={() => setShowBackgroundPicker(false)} className="absolute flex gap-5 shadow-md p-5 rounded-md w-max bottom-[11.5rem] lg:bottom-[6.1rem] z-10 bg-white left-0 dark:bg-dim">
+              <div>
+                <b className='mb-3 block'>Background color</b>
+                <ul className="grid grid-cols-4 gap-2">
+                  {COLORS.map((item, index: number) => <li key={index} onClick={() => setBackground(item)} className="cursor-pointer hover:opacity-50 transition-all h-6 w-8 rounded-sm" style={{ background: item }}></li>)}
+                </ul>
+              </div>
+              <div>
+                <b className='mb-3 block'>Gradients</b>
+                <ul className="grid grid-cols-4 gap-2">
+                  {GRADIENTS.map((item, index: number) => <li key={index} onClick={() => setBackground(item)} className="cursor-pointer hover:opacity-50 transition-all h-6 w-8 rounded-sm" style={{ background: item }}></li>)}
+                </ul>
+              </div>
+            </div>}
+            {showTemplateSelector && <div onMouseLeave={() => setShowTemplateSelector(false)} className="absolute flex gap-5 shadow-md p-5 rounded-md w-max bottom-[11.5rem] lg:bottom-[6.1rem] z-10 bg-white right-14 dark:bg-dim">
+              {/* <div> */}
+
+              <ul className="flex items-center gap-2 rounded-xl">
+                <li className="select-none w-[100px] relative flex flex-col items-center cursor-pointer  transition-all py-3 gap-1 px-2 md:px-5 rounded-md hover:text-blue-400  text-gray-500" onClick={() => setSelectedTemplate(availableTemplates[0])}>
+                  <IoEyedropSharp />
+                  <p>Thread</p>
+                </li>
+                <li className="select-none w-[100px] relative flex flex-col items-center cursor-pointer  transition-all py-3 gap-1 px-2 md:px-5 rounded-md hover:text-blue-400  text-gray-500" onClick={() => setSelectedTemplate(availableTemplates[1])}>
+                  <IoIosQuote />
+                  <p>Quote</p>
+                </li>
+              </ul>
+              {/* </div> */}
+            </div>}
+            {
+              showSettings && <div className="absolute flex gap-2 shadow-md p-5 rounded-md w-max bottom-[11.5rem] lg:bottom-[6.1rem] z-10 bg-white right-0 dark:bg-dim" onMouseLeave={() => setShowSettings(false)}>
+                <li className="select-none w-max relative flex flex-col items-center cursor-pointer  transition-all py-3 gap-1 px-2 md:px-5 rounded-md hover:text-blue-400  text-gray-500" onClick={() => toggleCardTheme()}>
+                  <IoColorPalette />
+                  <small>Theme-toggle</small>
+                </li>
+
+                <li className="select-none w-max relative flex flex-col items-center cursor-pointer  transition-all py-3 gap-1 px-2 md:px-5 rounded-md hover:text-blue-400  text-gray-500" onClick={() => { setShowStats(prev => !prev); setShowSettings(false) }}>
+                  <IoMdStats size={20} />
+                  <small>Show Stats</small>
+                </li>
+              </div>
+            }
+            <li className="select-none w-[100px] relative flex flex-col items-center cursor-pointer  transition-all py-3 gap-1 px-2 md:px-5 rounded-md hover:text-blue-400  text-gray-500" onMouseEnter={() => setShowBackgroundPicker(true)} onClick={() => { setShowTemplateSelector(false); setShowSettings(false); setShowBackgroundPicker(true)}}>
               <IoEyedropSharp />
               <small>Background</small>
             </li>
-            <li className={STYLES.control} onClick={downloadImage}>
+            <li className="select-none w-[100px] relative flex flex-col items-center cursor-pointer  transition-all py-3 gap-1 px-2 md:px-5 rounded-md hover:text-blue-400  text-gray-500" onClick={() => { downloadImage(); setShowTemplateSelector(false); setShowSettings(false); setShowBackgroundPicker(false) }} onMouseEnter={() => { setShowTemplateSelector(false); setShowSettings(false); setShowBackgroundPicker(false) }}>
               <FiDownload size={20} />
               <small>Download</small>
             </li>
-            <li className={STYLES.control} onClick={copyImage}>
+            <li className="select-none relative w-[100px] flex flex-col items-center cursor-pointer  transition-all py-3 gap-1  md:px-5 rounded-md hover:text-blue-400  text-gray-500" onClick={() => { copyImage(); setShowTemplateSelector(false); setShowSettings(false); setShowBackgroundPicker(false) }} onMouseEnter={() => { setShowTemplateSelector(false); setShowSettings(false); setShowBackgroundPicker(false) }}>
               <IoCopy />
               <small>Copy</small>
             </li>
-            <li className={STYLES.control} onClick={() => toggleCardTheme()}>
-              <IoColorPalette />
-              <small>Theme-toggle</small>
-            </li>
-            <li className={STYLES.control} onClick={() => setShowTemplateSelector(prev => !prev)}>
+            <li className="select-none w-[100px] relative flex flex-col items-center cursor-pointer  transition-all py-3 gap-1 px-2 md:px-5 rounded-md hover:text-blue-400  text-gray-500" onMouseEnter={() => { setShowTemplateSelector(true); setShowSettings(false) }} onClick={() => { setShowTemplateSelector(true); setShowSettings(false); setShowBackgroundPicker(false) }}>
               <VscExtensions size={20} />
               <small>Templates</small>
             </li>
-            {
-              selectedTemplate === availableTemplates[0] &&
-              <li className={STYLES.control} onClick={() => setShowStats(prev => !prev)}>
-                <IoMdStats size={20} />
-                <small>Show Stats</small>
-              </li>
-            }
+
+            <li className="select-none w-[100px] relative flex flex-col items-center cursor-pointer  transition-all py-3 gap-1 px-2 md:px-5 rounded-md hover:text-blue-400  text-gray-500" onClick={() => { setShowTemplateSelector(false);; setShowSettings(true) }} 
+              onMouseEnter={() => { setShowTemplateSelector(false); setShowSettings(true); setShowBackgroundPicker(false) }} >
+              <IoColorPalette />
+              <small>Customize</small>
+            </li>
+
           </ul>
+
           {/* CONTROLBOX */}
         </div>
-      </div>
+      </section>
     </main>
   )
 }
