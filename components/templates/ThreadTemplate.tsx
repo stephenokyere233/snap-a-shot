@@ -79,7 +79,7 @@ const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, p
                                     showStats && (
                                         <ul className='flex gap-3 '>
                                             <li className="flex items-center gap-1">
-                                                <AiTwotoneHeart className="text-red-400" size={17} />
+                                                <AiTwotoneHeart  size={17} />
                                                 <p className={`text-gray-600 ${cardTheme === "dark" && "text-white"} text-sm`}>{likeCount}</p>
                                             </li>
                                             <li className="flex items-center gap-1">
