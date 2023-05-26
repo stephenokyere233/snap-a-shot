@@ -1,14 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 import { FC, useContext } from 'react'
-import { FaRegComment } from 'react-icons/fa'
 import Loader from '../loader'
-import Image from 'next/image'
 import { TthreadProps } from '@/types'
-import { AiTwotoneHeart } from 'react-icons/ai'
+import { HiOutlineHeart } from 'react-icons/hi'
+import { HiOutlineChatBubbleOvalLeft } from "react-icons/hi2"
 import { TABS } from '@/constants/tabs'
 import formatDate from '@/utils/formatDate.util'
 import linkifyUsernames from '@/utils/formatPostContent.util'
-import Link from 'next/link'
 import ThreadLink from '../ThreadLink'
 import convertLinksToHTML from '@/utils/convertsLinksToHTML.util'
 import addHashtagLinks from '@/utils/addhashTagLinks.util'
@@ -79,11 +77,11 @@ const ThreadTemplate: FC<TthreadProps> = ({ platformLogo, platform, isLoading, p
                                     showStats && (
                                         <ul className='flex gap-3 '>
                                             <li className="flex items-center gap-1">
-                                                <AiTwotoneHeart  size={17} />
+                                                <HiOutlineHeart  size={17} />
                                                 <p className={`text-gray-600 ${cardTheme === "dark" && "text-white"} text-sm`}>{likeCount}</p>
                                             </li>
                                             <li className="flex items-center gap-1">
-                                                <FaRegComment size={17} />
+                                                <HiOutlineChatBubbleOvalLeft size={17} />
                                                 <p className={`text-gray-600 ${cardTheme === "dark" && "text-white"} text-sm`}>{replyCount}</p>
                                             </li>
                                         </ul>
