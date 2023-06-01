@@ -86,10 +86,10 @@ export default function Home() {
     else {
       if (platform === TABS[0]) {
         setIsValidShowwcaseLink(false)
-        console.log("invalid showwcase link")
+        // console.log("invalid showwcase link")
       } else {
         setIsValidTwitterLink(false)
-        console.log("invalid twitter link")
+        // console.log("invalid twitter link")
       }
     }
   }
@@ -99,7 +99,6 @@ export default function Home() {
     setErrorMessage(null)
     if (link) {
       checkValidity(link)
-      console.log("valid here", link)
     }
   }, [platform])
 
@@ -112,7 +111,6 @@ export default function Home() {
 
   }
   const handleSubmit = () => {
-    console.log(platform)
     if (!link) {
       setError(true)
       setErrorMessage("Please paste in a link")
@@ -162,9 +160,9 @@ export default function Home() {
     setLoading(true)
     try {
       const response = await axios.get(`/api/fetchTweet?twitterPostID=${twitterPostID}`);
-      console.log(response.data);
+      // console.log(response.data);
       if (response.data.errors) {
-        console.log("failed to fetch tweet")
+        // console.log("failed to fetch tweet")
         setTwitterFetchFailed(true)
         setIsTwitterDataFetched(false)
         setLoading(false)
@@ -172,7 +170,7 @@ export default function Home() {
       }
       if (response.data.data || response.data.includes) {
         setIsTwitterDataFetched(true)
-        console.log(response.data)
+        // console.log(response.data)
         setTweetInfo(response.data)
         setTwitterFetchFailed(false)
         setLoading(false)
@@ -180,8 +178,8 @@ export default function Home() {
       }
     } catch (error) {
       setLoading(false)
-      console.error(error);
-      console.log("failed to fetch tweet")
+      // console.error(error);
+      // console.log("failed to fetch tweet")
       setTwitterFetchFailed(true)
     }
   }
@@ -194,44 +192,46 @@ export default function Home() {
     };
 
     axios.request(options).then(function (response) {
-      console.log(response.data);
+      // console.log(response.data);
       setUser(response.data)
     }).catch(function (error) {
-      console.error(error);
+      // console.error(error);
     });
   }
 
   const fetchThread = (threadID: string) => {
-    setLoading(true)
+    setLoading(true);
     const options = {
       method: 'GET',
       url: 'https://cache.showwcase.com/threads/' + threadID,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+      },
     };
 
     axios.request(options).then(function (response) {
-      console.log(response.data);
-      fetchThreadOwner(response.data.user.username)
-      setThreadInfo(response.data)
-      setLoading(false)
-      setIsShowwcaseDataFetched(true)
+      // console.log(response.data);
+      fetchThreadOwner(response.data.user.username);
+      setThreadInfo(response.data);
+      setLoading(false);
+      setIsShowwcaseDataFetched(true);
     }).catch(function (error) {
       console.error(error);
-      setLoading(false)
-      setShowwcaseFetchFailed(true)
-    })
+      setLoading(false);
+      setShowwcaseFetchFailed(true);
+    });
   }
+
   const toggleCardTheme = () => {
-    console.log(cardTheme)
     setShowTemplateSelector(false)
     setShowSettings(false)
     if (cardTheme === "light") {
       setCardTheme("dark")
-      console.log("dark will show now")
     }
     else {
       setCardTheme("light")
-      console.log("light will show now")
-
     }
   }
 
